@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Art Walk Path</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&amp;family=Manrope:wght@400;500;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./script.js" defer></script>
+  </head>
+  <body class="trail-page" id="top">
+    <header class="site-header">
+      <a class="brand" href="./index.html" aria-label="Forest Park Forever home">
+        <img
+          class="brand-logo"
+          src="./assets/fpf-logo-cropped.png"
+          alt="Forest Park Forever"
+        />
+      </a>
+
+      <nav class="main-nav" aria-label="Primary">
+        <a href="./index.html#about">About</a>
+        <a href="./index.html#visit">Visit</a>
+        <a href="./index.html#support">Support</a>
+        <a href="./index.html#learn">Learn</a>
+        <a href="./index.html#blog">Blog</a>
+        <a class="donate-link" href="./index.html#footer">Donate Now</a>
+      </nav>
+
+      <div class="header-tools">
+        <label class="search-box">
+          <span class="visually-hidden">Search</span>
+          <input type="search" placeholder="Search" />
+          <span class="search-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" role="presentation">
+              <circle cx="11" cy="11" r="6.5"></circle>
+              <path d="M16 16L21 21"></path>
+            </svg>
+          </span>
+        </label>
+        <button class="cart-button" type="button" aria-label="Cart">
+          <svg viewBox="0 0 28 24" role="presentation">
+            <path d="M2 2H5L7.2 14H21.2L24 6H8.4"></path>
+            <circle cx="10" cy="20" r="1.5"></circle>
+            <circle cx="20" cy="20" r="1.5"></circle>
+          </svg>
+          <span class="cart-count">0</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="trail-main">
+      <section class="trail-shell">
+        <h1 class="trail-title">Art Walk Path</h1>
+
+        <div class="trail-map-frame" aria-label="Art Walk Path map"></div>
+
+        <section class="trail-about">
+          <h2>About the Path</h2>
+          <p>
+            Wander through a curated stretch of Forest Park where creativity extends
+            beyond gallery walls. The Art Walk Path invites you to explore the connection
+            between nature, sculpture, and architecture as you travel from the Saint Louis
+            Art Museum to the Jewel Box. Along the way, you will encounter moments of
+            artistic discovery, some hidden in plain sight, others revealed through playful
+            clues.
+          </p>
+          <p>
+            Follow the trail, solve light riddles, and let curiosity guide your route. This
+            path takes approximately 20 to 30 minutes to complete and is designed for all
+            ages and experience levels. Complete the trail to earn a limited edition
+            trinket, created in collaboration with the Saint Louis Art Museum and the
+            Jewel Box, your reward for seeing the park through an artistic lens.
+          </p>
+        </section>
+
+        <div class="mockup-divider trail-divider" aria-hidden="true"></div>
+
+        <section class="trail-qr-section trail-breakout">
+          <div class="trail-qr-inner">
+            <div class="trail-qr-copy">
+              <h2>Scan the QR code to begin!</h2>
+              <p>Scan the QR code present at the start of the trail in order to start!</p>
+              <p>Enable GPS access for real-time clues and trail guidance if you get lost.</p>
+              <p>
+                Don’t forget to scan the QR code at the end in order to mark the trail as
+                completed.
+              </p>
+            </div>
+            <a class="trail-qr-link" href="./start-trail.html" data-trail-qr-link><img class="trail-qr-card" src="./assets/art-walk-qr.svg" alt="Art Walk trail QR code" /></a>
+          </div>
+        </section>
+
+        <div class="mockup-divider trail-divider" aria-hidden="true"></div>
+
+        <section class="trail-progress" data-trail-progress>
+          <img
+            class="trail-progress-image"
+            src="./assets/trail-tracker.svg"
+            alt="Trail tracker route"
+          />
+          <div class="trail-progress-status" aria-live="polite">~20 mins left</div>
+          <div class="trail-progress-cover" aria-hidden="true"></div>
+          <button
+            class="trail-start-trigger"
+            type="button"
+            aria-label="Start the trail"
+            data-start-trail
+          ></button>
+          <button
+            class="trail-finish-trigger"
+            type="button"
+            aria-label="Finish the trail"
+            data-finish-trail
+          ></button>
+          <div class="trail-photo-layer" data-photo-layer></div>
+          <div class="trail-toggle-menu" aria-label="Trail photo controls">
+            <img
+              class="trail-toggle-menu-art"
+              src="./assets/toggle-menu.svg"
+              alt=""
+              aria-hidden="true"
+            />
+            <div class="trail-toggle-menu-copy">
+              <label class="trail-toggle-row">
+                <span>See Others Photos</span>
+                <input type="checkbox" data-filter-others />
+              </label>
+              <label class="trail-toggle-row">
+                <span>See Your Photos</span>
+                <input type="checkbox" data-filter-yours />
+              </label>
+            </div>
+            <button class="trail-upload-button" type="button" data-photo-upload>
+              Upload a Photo
+            </button>
+          </div>
+          <button class="trail-placement-confirm" type="button" hidden data-photo-confirm>
+            Confirm Placement
+          </button>
+        </section>
+
+        <div class="mockup-divider trail-divider trail-divider-bottom" aria-hidden="true"></div>
+
+        <section class="trail-buttons">
+          <a class="trail-action-button" href="./index.html#hunts" aria-label="See all trails">
+            <img src="./assets/buttons/see-all-trails-button.svg" alt="See all trails" />
+          </a>
+          <a class="trail-action-button" href="./Passport.html" aria-label="View passport">
+            <img src="./assets/buttons/view-passport-button.svg" alt="View passport" />
+          </a>
+        </section>
+      </section>
+    </main>
+
+    <dialog class="upload-dialog" data-upload-dialog>
+      <form class="upload-form" method="dialog" data-upload-form>
+        <h2>Upload a Trail Photo</h2>
+        <p>Add one image, your name, the date, and an optional short description.</p>
+        <label class="passport-field">
+          <span>Photo</span>
+          <input type="file" name="photo" accept="image/*" required />
+        </label>
+        <label class="passport-field">
+          <span>Name</span>
+          <input type="text" name="name" required />
+        </label>
+        <label class="passport-field">
+          <span>Date</span>
+          <input type="date" name="date" required />
+        </label>
+        <label class="passport-field">
+          <span>Description (Optional)</span>
+          <textarea name="description" rows="3"></textarea>
+        </label>
+        <div class="passport-actions">
+          <button class="passport-button ghost-button" type="button" data-upload-cancel>
+            Cancel
+          </button>
+          <button class="passport-button" type="submit">Add Photo</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="photo-detail-dialog" data-photo-detail-dialog>
+      <div class="photo-detail-card">
+        <img class="photo-detail-image" src="" alt="" data-photo-detail-image />
+        <div class="photo-detail-copy">
+          <h2 data-photo-detail-name></h2>
+          <p class="photo-detail-date" data-photo-detail-date></p>
+          <p class="photo-detail-description" data-photo-detail-description></p>
+          <div class="passport-actions">
+            <button class="passport-button ghost-button" type="button" data-photo-detail-close>
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog class="start-trail-dialog" data-start-trail-dialog>
+      <form class="start-trail-card" method="dialog">
+        <h2>Start the trail?</h2>
+        <div class="passport-actions start-trail-actions">
+          <button class="passport-button ghost-button" type="button" data-start-trail-no>
+            No
+          </button>
+          <button class="passport-button" type="button" data-start-trail-yes>Yes</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="passport-dialog" data-passport-gate-dialog>
+      <form class="passport-form" method="dialog" data-passport-gate-form>
+        <h2>Log in to view your passport</h2>
+        <p>Use the same email and password you want tied to your trail progress.</p>
+        <label class="passport-field">
+          <span>Email</span>
+          <input type="email" name="email" required />
+        </label>
+        <label class="passport-field">
+          <span>Password</span>
+          <input type="password" name="password" required />
+        </label>
+        <div class="passport-actions">
+          <button class="passport-button ghost-button" type="button" data-passport-gate-cancel>
+            Cancel
+          </button>
+          <button class="passport-button" type="submit">Continue</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="finish-trail-dialog" data-finish-trail-dialog>
+      <div class="start-trail-card finish-trail-card">
+        <h2>Did you finish the trail?</h2>
+        <div class="passport-actions start-trail-actions" data-finish-trail-actions>
+          <button class="passport-button ghost-button" type="button" data-finish-trail-no>
+            No
+          </button>
+          <button class="passport-button" type="button" data-finish-trail-yes>Yes</button>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog class="finish-trail-dialog" data-finish-trail-reward-dialog>
+      <div class="start-trail-card finish-trail-card">
+        <h2>You just won a stamp!</h2>
+        <img
+          class="finish-trail-stamp"
+          src="./assets/passport-stamp-2.svg"
+          alt="Passport stamp"
+          data-finish-trail-stamp
+        />
+        <div class="passport-actions start-trail-actions">
+          <button class="passport-button ghost-button" type="button" data-finish-trail-close>
+            Close
+          </button>
+          <a class="passport-button finish-trail-passport-link" href="./Passport.html">
+            View Passport
+          </a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer" id="footer">
+      <div class="mockup-divider footer-divider" aria-hidden="true"></div>
+      <section class="footer-highlights" id="blog">
+        <article class="footer-story">
+          <div class="story-image story-one"></div>
+          <h3>Conservation Efforts</h3>
+        </article>
+        <article class="footer-story">
+          <div class="story-image story-two"></div>
+          <h3>Explore Forest Park with our Interactive Map</h3>
+        </article>
+        <article class="footer-story">
+          <div class="story-image story-three"></div>
+          <h3>Recreational Path Tips</h3>
+        </article>
+      </section>
+      <div class="mockup-divider footer-divider" aria-hidden="true"></div>
+
+      <section class="footer-main">
+        <div class="footer-brand">
+          <img
+            class="footer-brand-logo"
+            src="./assets/fpf-logo-cropped.png"
+            alt="Forest Park Forever"
+          />
+        </div>
+
+        <div class="footer-links">
+          <a href="./index.html#support">Ways to Support</a>
+          <a href="./index.html#visit">Events Calendar</a>
+          <a href="./index.html#hunts">Shop</a>
+          <a href="./index.html#about">Sign Up for E-News</a>
+        </div>
+      </section>
+
+      <section class="footer-bottom">
+        <div>
+          <strong>Forest Park Forever</strong>
+          <p>info@forestparkforever.org | 314.367.7275</p>
+          <p>5595 Grand Drive in Forest Park | St. Louis, MO 63112</p>
+        </div>
+        <a href="#top">Privacy Policy</a>
+        <div class="socials" aria-label="Social links">
+          <a href="#top" aria-label="Facebook">f</a>
+          <a href="#top" aria-label="Instagram">i</a>
+          <a href="#top" aria-label="LinkedIn">in</a>
+        </div>
+      </section>
+    </footer>
+  </body>
+</html>
