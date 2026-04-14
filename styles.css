@@ -1,0 +1,1618 @@
+:root {
+  --page-bg: #f7f4ec;
+  --paper: #fffdf8;
+  --text: #111111;
+  --muted: #4d4a45;
+  --green: #93bf3f;
+  --green-soft: #b8c8ae;
+  --green-deep: #3f5a2b;
+  --sky: #3bbcf2;
+  --sky-deep: #169fd8;
+  --sun: #fff59d;
+  --footer: #77746f;
+  --divider: #d8d2c7;
+  --shadow: 0 22px 55px rgba(36, 38, 27, 0.12);
+  --radius-lg: 30px;
+  --radius-md: 22px;
+  --content-width: min(1080px, calc(100vw - 48px));
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 24px;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  overflow-x: hidden;
+  background: #ffffff;
+  color: var(--text);
+  font-family: "Manrope", sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.site-header {
+  width: var(--content-width);
+  margin: 0 auto;
+  padding: 14px 0 12px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 28px;
+  align-items: center;
+  background: #ffffff;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+}
+
+.brand-logo {
+  display: block;
+  width: min(100%, 200px);
+  height: auto;
+}
+
+.main-nav {
+  display: flex;
+  justify-content: center;
+  gap: clamp(18px, 2vw, 28px);
+  color: #9ec648;
+  font-weight: 700;
+  font-size: clamp(0.92rem, 1.28vw, 1rem);
+}
+
+.main-nav a {
+  position: relative;
+}
+
+.main-nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -8px;
+  width: 100%;
+  height: 2px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 160ms ease;
+}
+
+.main-nav a:hover::after,
+.main-nav a:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.donate-link {
+  padding: 10px 16px;
+  border: 1px solid #f0ede5;
+  border-radius: 2px;
+  background: #fcfcf8;
+}
+
+.header-tools {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.search-box {
+  position: relative;
+  display: block;
+}
+
+.search-box input {
+  width: 188px;
+  height: 42px;
+  border: 1px solid #eee7da;
+  background: #fcfcfb;
+  border-radius: 0;
+  padding: 8px 40px 8px 14px;
+  outline: none;
+  color: #57544f;
+  font-size: 0.9rem;
+}
+
+.search-box input::placeholder {
+  color: #8b857d;
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  width: 19px;
+  height: 19px;
+  transform: translateY(-50%);
+  color: #d7965a;
+}
+
+.search-icon svg,
+.cart-button svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.cart-button {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: #8d8a86;
+  cursor: pointer;
+}
+
+.cart-button svg {
+  width: 30px;
+  height: 30px;
+}
+
+.cart-count {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  min-width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: #9ec648;
+  color: #111;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.hero {
+  position: relative;
+  width: 100%;
+  min-height: 610px;
+  margin: 0 auto;
+  overflow: hidden;
+  background-color: #cfd6d0;
+  background-image:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.18)),
+    url("./assets/exterior-slam.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.hero-orbs {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hero-orb {
+  position: absolute;
+  width: clamp(72px, 8vw, 112px);
+  height: auto;
+  object-fit: contain;
+  filter:
+    drop-shadow(0 10px 18px rgba(0, 0, 0, 0.14))
+    drop-shadow(0 2px 5px rgba(255, 255, 255, 0.14));
+  animation: hero-float 8.8s ease-in-out infinite;
+  opacity: 0.98;
+  will-change: transform;
+}
+
+@keyframes hero-float {
+  0%,
+  100% {
+    transform: translate3d(0, -2px, 0);
+  }
+
+  50% {
+    transform: translate3d(0, 5px, 0);
+  }
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  min-height: 610px;
+  padding: 72px 20px 100px;
+  text-align: center;
+}
+
+.hero-actions {
+  display: grid;
+  gap: 16px;
+  justify-items: center;
+}
+
+.hero h1,
+.content-section h2 {
+  font-family: "Manrope", sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+}
+
+.hero h1 {
+  margin: 0 0 26px;
+  color: white;
+  font-size: clamp(3.5rem, 8vw, 6.2rem);
+  line-height: 0.95;
+  text-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+}
+
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 34px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #55c5f4 0%, #40b6ea 100%);
+  color: #111;
+  font-size: 1.1rem;
+  font-weight: 800;
+  box-shadow: var(--shadow);
+}
+
+.secondary-cta {
+  border: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(241, 248, 232, 0.96));
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.16);
+}
+
+.content-section {
+  width: var(--content-width);
+  margin: 0 auto;
+  padding: 42px 0;
+}
+
+.content-section h2 {
+  margin: 0 0 20px;
+  font-size: clamp(2.6rem, 4vw, 4rem);
+  line-height: 0.95;
+}
+
+.content-section p {
+  max-width: 1020px;
+  margin: 0 0 10px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.mockup-divider {
+  width: var(--content-width);
+  height: 10px;
+  margin: 0 auto;
+  background-image: url("./assets/diamond-border.png");
+  background-repeat: repeat-x;
+  background-position: center;
+  background-size: auto 10px;
+}
+
+.section-divider {
+  margin: 40px auto;
+}
+
+.section-heading {
+  padding-bottom: 10px;
+}
+
+.prize-section {
+  margin-top: 12px;
+}
+
+.prize-strip {
+  width: 100%;
+  margin: 0;
+  padding: 34px 0;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--sky-deep), #19a5e0);
+}
+
+.prize-track {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: max-content;
+  padding: 0 32px;
+  animation: prize-carousel 18s linear infinite;
+}
+
+.prize-card {
+  width: 152px;
+  min-width: 152px;
+  min-height: 160px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+}
+
+.prize-icon {
+  width: 128px;
+  height: 128px;
+  margin: 0 auto;
+  padding: 10px;
+  border-radius: 16px;
+  background: #ffffff;
+  object-fit: contain;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+}
+
+.prize-copy {
+  padding-top: 36px;
+}
+
+@keyframes prize-carousel {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-50% - 12px));
+  }
+}
+
+.how-section {
+  padding-top: 72px;
+}
+
+.steps {
+  display: grid;
+  gap: 28px;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  align-items: center;
+  gap: 18px;
+}
+
+.step-number {
+  color: #8caf47;
+  font-size: 1.55rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.step p {
+  margin: 0;
+  font-size: clamp(1.3rem, 2vw, 2rem);
+  line-height: 1.55;
+  color: #171717;
+}
+
+.banner-callout {
+  width: 100%;
+  margin: 28px auto 0;
+  padding: 34px 24px;
+  background: linear-gradient(180deg, var(--sky-deep), #1aafe6);
+  color: white;
+  text-align: center;
+  font-size: clamp(1.2rem, 2vw, 1.8rem);
+  font-weight: 700;
+}
+
+.banner-callout p {
+  margin: 0;
+}
+
+.hunts-section {
+  padding-top: 54px;
+}
+
+.hunt-browser {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 30px;
+  align-items: center;
+}
+
+.hunt-grid.static-hunts {
+  width: min(760px, 100%);
+  margin: 0 auto;
+  grid-template-columns: repeat(2, minmax(0, 240px));
+  justify-content: center;
+  gap: 28px;
+  padding-top: 18px;
+}
+
+.arrow-button {
+  width: 64px;
+  height: 64px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #59caf7;
+  font-size: 5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.hunt-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  padding: 10px 0;
+}
+
+.hunt-card {
+  min-height: 178px;
+  border-radius: 22px;
+  background: var(--green-soft);
+  box-shadow: inset 0 0 0 1px rgba(147, 191, 63, 0.18);
+}
+
+.hunt-card-link {
+  display: block;
+  transition: transform 180ms ease, opacity 180ms ease;
+}
+
+.hunt-grid.static-hunts:hover .hunt-card-link:not(:hover) {
+  opacity: 0.48;
+}
+
+.hunt-card-link:hover,
+.hunt-card-link:focus-visible {
+  transform: scale(1.06);
+  opacity: 1;
+}
+
+.hunt-card-link:focus-visible {
+  outline: none;
+}
+
+.walk-card {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  background: transparent;
+  box-shadow: none;
+}
+
+.walk-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 22px;
+}
+
+.walk-card-label {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  border-radius: 22px;
+  background: rgba(0, 0, 0, 0.18);
+  color: #ffffff;
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(1.15rem, 1.7vw, 1.4rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.hunt-card-link:hover .walk-card-label,
+.hunt-card-link:focus-visible .walk-card-label {
+  opacity: 1;
+}
+
+.map-card {
+  min-height: 420px;
+  border-radius: 22px;
+  background: #d9d9d9;
+}
+
+.filter-button {
+  margin-top: 20px;
+  width: 100%;
+  border: 0;
+  cursor: pointer;
+}
+
+.site-footer {
+  margin-top: 62px;
+  padding: 48px 0 38px;
+  background: var(--footer);
+  color: white;
+}
+
+.passport-main {
+  min-height: 48vh;
+  padding: 34px 0 0;
+}
+
+.passport-shell {
+  width: min(1120px, calc(100vw - 64px));
+  margin: 0 auto;
+}
+
+.passport-title {
+  margin: 0 0 34px;
+  text-align: center;
+  font-size: clamp(2.6rem, 4.4vw, 4.2rem);
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+
+.passport-display {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0 12px;
+}
+
+.passport-card-stack {
+  position: relative;
+  width: min(920px, 100%);
+}
+
+.passport-card-back,
+.passport-card-front {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.passport-card-back {
+  position: absolute;
+  inset: auto auto -14px 26px;
+  width: calc(100% - 52px);
+  opacity: 0.26;
+  filter: saturate(0.85);
+  pointer-events: none;
+}
+
+.passport-card-front {
+  position: relative;
+  z-index: 2;
+}
+
+.passport-actions-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.passport-return-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 180px;
+  min-height: 52px;
+  padding: 12px 26px;
+  border-radius: 999px;
+  background: #55c5f4;
+  color: #111111;
+  font-weight: 800;
+  text-decoration: none;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease;
+}
+
+.passport-return-button:hover,
+.passport-return-button:focus-visible {
+  background: #48bbea;
+  box-shadow: 0 12px 28px rgba(85, 197, 244, 0.28);
+  transform: translateY(-1px);
+}
+
+.passport-dialog {
+  width: min(440px, calc(100vw - 32px));
+  padding: 0;
+  border: 0;
+  border-radius: 24px;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.24);
+}
+
+.passport-dialog::backdrop {
+  background: rgba(17, 17, 17, 0.42);
+}
+
+.passport-form {
+  display: grid;
+  gap: 18px;
+  padding: 30px;
+}
+
+.passport-form h2 {
+  margin: 0;
+  font-size: 2rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.passport-form p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.passport-field {
+  display: grid;
+  gap: 8px;
+  font-weight: 700;
+}
+
+.passport-field input {
+  width: 100%;
+  height: 48px;
+  padding: 10px 14px;
+  border: 1px solid #ddd6ca;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.passport-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.passport-button {
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #55c5f4 0%, #40b6ea 100%);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.ghost-button {
+  background: #eef2e4;
+}
+
+@media (max-width: 900px) {
+  .passport-main {
+    padding-top: 24px;
+  }
+
+  .passport-shell {
+    width: min(100%, calc(100vw - 28px));
+  }
+
+  .passport-title {
+    margin-bottom: 24px;
+    font-size: clamp(2.1rem, 10vw, 3rem);
+  }
+
+  .passport-card-back {
+    left: 14px;
+    bottom: -8px;
+    width: calc(100% - 28px);
+  }
+
+  .passport-actions-row {
+    margin-top: 20px;
+  }
+}
+
+.footer-divider {
+  margin-bottom: 38px;
+  filter: brightness(1.9);
+}
+
+.footer-highlights,
+.footer-main,
+.footer-bottom {
+  width: var(--content-width);
+  margin: 0 auto;
+}
+
+.footer-highlights {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  padding: 0 0 38px;
+}
+
+.footer-story {
+  padding-top: 36px;
+}
+
+.story-image {
+  min-height: 118px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  background-size: cover;
+  background-position: center;
+}
+
+.story-one {
+  background:
+    linear-gradient(135deg, rgba(27, 89, 34, 0.4), rgba(255,255,255,0)),
+    linear-gradient(120deg, #a3db76 0%, #4f7930 100%);
+}
+
+.story-two {
+  background:
+    linear-gradient(135deg, rgba(15, 65, 90, 0.3), rgba(255,255,255,0)),
+    linear-gradient(120deg, #f3d4d6 0%, #6cb8dd 100%);
+}
+
+.story-three {
+  background:
+    linear-gradient(135deg, rgba(20, 65, 36, 0.35), rgba(255,255,255,0)),
+    linear-gradient(120deg, #a7d079 0%, #234925 100%);
+}
+
+.footer-story h3 {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+.footer-main {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 40px;
+  padding: 42px 0 24px;
+}
+
+.footer-brand-logo {
+  display: block;
+  width: min(200px, 100%);
+  height: auto;
+}
+
+.footer-brand p {
+  display: none;
+}
+
+.footer-links {
+  display: grid;
+  gap: 18px;
+  align-content: start;
+  justify-items: start;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.footer-bottom {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 28px;
+  align-items: end;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.footer-bottom p {
+  margin: 6px 0 0;
+}
+
+.socials {
+  display: flex;
+  gap: 8px;
+}
+
+.socials a {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.12);
+  font-weight: 700;
+}
+
+.trail-main {
+  padding: 8px 0 72px;
+}
+
+.trail-shell {
+  width: min(1540px, calc(100vw - 112px));
+  margin: 0 auto;
+}
+
+.trail-title {
+  margin: 32px 0 24px;
+  text-align: center;
+  font-size: clamp(3rem, 5vw, 5rem);
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+  font-weight: 800;
+}
+
+.trail-map-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1470 / 1072;
+  border-radius: 26px;
+  overflow: hidden;
+  background: url("./assets/art-walk-path-map.png") center center / cover no-repeat;
+}
+
+.trail-about {
+  padding-top: 44px;
+}
+
+.trail-about h2 {
+  margin: 0 0 24px;
+  font-size: clamp(2.7rem, 4vw, 4.2rem);
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+  font-weight: 800;
+}
+
+.trail-about p {
+  margin: 0 0 14px;
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  line-height: 1.95;
+  color: #2c2a28;
+}
+
+.trail-divider {
+  margin: 40px auto;
+}
+
+.trail-breakout {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  box-sizing: border-box;
+}
+
+.trail-qr-section {
+  width: 100%;
+  background: linear-gradient(180deg, var(--sky-deep), #19a5e0);
+  color: #ffffff;
+}
+
+.trail-qr-inner {
+  display: grid;
+  grid-template-columns: 1.35fr 320px;
+  gap: 32px;
+  align-items: center;
+  width: min(1540px, calc(100vw - 112px));
+  margin: 0 auto;
+  padding: 28px 38px;
+  box-sizing: border-box;
+}
+
+.trail-qr-copy h2 {
+  margin: 0 0 22px;
+  font-size: clamp(2.4rem, 4vw, 4rem);
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+  font-weight: 800;
+}
+
+.trail-qr-copy p {
+  margin: 0 0 10px;
+  font-size: clamp(1rem, 1.3vw, 1.12rem);
+  line-height: 1.8;
+}
+
+.trail-qr-card {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.14);
+}
+
+.trail-progress {
+  position: relative;
+  padding: 18px 0 10px;
+}
+
+.trail-progress-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.trail-progress-status {
+  position: absolute;
+  top: 6.5%;
+  left: 50%;
+  z-index: 3;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #4d4d4d;
+  font-size: clamp(1.1rem, 2vw, 1.45rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+.trail-progress-cover {
+  position: absolute;
+  top: 5.2%;
+  left: 11.5%;
+  z-index: 3;
+  width: 29%;
+  height: 18%;
+  border-radius: 28px;
+  background: #f7f7f7;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+.trail-progress.is-started .trail-progress-status,
+.trail-progress.is-started .trail-progress-cover {
+  opacity: 1;
+}
+
+.trail-start-trigger {
+  position: absolute;
+  top: 28.3%;
+  left: 14.9%;
+  width: clamp(54px, 6.8vw, 78px);
+  aspect-ratio: 1;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+  cursor: pointer;
+}
+
+.trail-start-trigger:hover,
+.trail-start-trigger:focus-visible {
+  background: rgba(255, 228, 10, 0.22);
+  box-shadow: 0 0 0 4px rgba(255, 228, 10, 0.28);
+  outline: none;
+}
+
+.trail-finish-trigger {
+  position: absolute;
+  top: 67.5%;
+  left: 83.5%;
+  width: clamp(54px, 6.8vw, 78px);
+  aspect-ratio: 1;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.trail-finish-trigger:hover,
+.trail-finish-trigger:focus-visible {
+  background: rgba(255, 228, 10, 0.22);
+  box-shadow: 0 0 0 4px rgba(255, 228, 10, 0.28);
+  outline: none;
+}
+
+.trail-progress.is-started .trail-finish-trigger {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.trail-photo-layer {
+  position: absolute;
+  inset: 18px 0 10px;
+  pointer-events: none;
+}
+
+.trail-photo-marker {
+  position: absolute;
+  z-index: 5;
+  width: 92px;
+  height: 92px;
+  padding: 0;
+  border: 4px solid #ffffff;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.trail-photo-marker.is-pending {
+  box-shadow: 0 0 0 4px rgba(90, 206, 255, 0.75), 0 16px 36px rgba(0, 0, 0, 0.2);
+}
+
+.trail-photo-marker.is-dragging {
+  z-index: 12;
+  cursor: grabbing;
+}
+
+.trail-photo-marker img {
+  display: block;
+  width: 100%;
+  height: calc(100% - 22px);
+  object-fit: cover;
+}
+
+.trail-photo-meta {
+  display: block;
+  height: 22px;
+  padding: 3px 6px 0;
+  background: rgba(255, 255, 255, 0.95);
+  color: #111;
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.trail-toggle-menu {
+  position: absolute;
+  left: 36px;
+  bottom: 84px;
+  width: 280px;
+  z-index: 2;
+  height: auto;
+}
+
+.trail-toggle-menu-art {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+}
+
+.trail-toggle-menu-copy {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  display: grid;
+  align-content: start;
+  gap: 16px;
+  padding: 22px 22px 0 22px;
+  pointer-events: none;
+}
+
+.trail-toggle-row {
+  position: relative;
+  display: block;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding-right: 62px;
+  min-height: 22px;
+  pointer-events: none;
+}
+
+.trail-toggle-row input {
+  appearance: none;
+  width: 40px;
+  height: 18px;
+  margin: 0;
+  border-radius: 999px;
+  background: #ff4438;
+  border: 2px solid #ffffff;
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  transition: background 160ms ease;
+  pointer-events: auto;
+}
+
+.trail-toggle-row input::after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: #ffffff;
+  transition: transform 160ms ease;
+}
+
+.start-trail-dialog {
+  width: min(360px, calc(100vw - 32px));
+  padding: 0;
+  border: 0;
+  border-radius: 24px;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.24);
+}
+
+.start-trail-dialog::backdrop {
+  background: rgba(17, 17, 17, 0.42);
+}
+
+.start-trail-card {
+  display: grid;
+  gap: 22px;
+  padding: 28px;
+}
+
+.start-trail-card h2 {
+  margin: 0;
+  text-align: center;
+  font-size: 2rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.start-trail-actions {
+  justify-content: center;
+}
+
+.finish-trail-card {
+  align-items: center;
+}
+
+.finish-trail-save-note {
+  margin: -6px 0 0;
+  justify-self: center;
+  text-align: center;
+  max-width: 24ch;
+  color: #5c5c5c;
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+
+.finish-trail-stamp {
+  display: block;
+  width: 144px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.passport-earned-stamp {
+  position: absolute;
+  z-index: 3;
+  width: clamp(84px, 9vw, 118px);
+  left: 14.5%;
+  top: 56.1%;
+  transform: translate(-50%, -50%) rotate(-10deg);
+  filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.12));
+}
+
+.trail-toggle-row input:checked {
+  background: #2ecc71;
+}
+
+.trail-toggle-row input:checked::after {
+  transform: translateX(-20px);
+}
+
+.trail-upload-button {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: -56px;
+  padding: 11px 14px;
+  border: 1px solid rgba(17, 17, 17, 0.08);
+  border-radius: 14px;
+  background: #fffdc4;
+  color: #111111;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+  z-index: 3;
+}
+
+.trail-placement-confirm {
+  position: absolute;
+  right: 36px;
+  bottom: 40px;
+  padding: 14px 18px;
+  border: 0;
+  border-radius: 14px;
+  background: #87a66b;
+  color: #ffffff;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.16);
+}
+
+.trail-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  padding: 8px 0 26px;
+}
+
+.trail-action-button {
+  display: block;
+  width: min(420px, calc(50% - 11px));
+}
+
+.trail-action-button img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.trail-divider-bottom {
+  margin-bottom: 18px;
+}
+
+.upload-form textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #ddd6ca;
+  border-radius: 12px;
+  resize: vertical;
+  font: inherit;
+}
+
+.photo-detail-dialog {
+  width: min(620px, calc(100vw - 32px));
+  padding: 0;
+  border: 0;
+  border-radius: 24px;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.24);
+}
+
+.photo-detail-dialog::backdrop {
+  background: rgba(17, 17, 17, 0.42);
+}
+
+.photo-detail-card {
+  display: grid;
+  grid-template-columns: minmax(0, 240px) 1fr;
+  gap: 22px;
+  padding: 22px;
+  background: #ffffff;
+}
+
+.photo-detail-image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 18px;
+  object-fit: cover;
+}
+
+.photo-detail-copy {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+}
+
+.photo-detail-copy h2 {
+  margin: 0;
+  font-size: 2rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.photo-detail-date,
+.photo-detail-description {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+@media (max-width: 980px) {
+  .site-header {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 18px;
+  }
+
+  .main-nav {
+    flex-wrap: wrap;
+  }
+
+  .header-tools {
+    gap: 18px;
+  }
+
+  .hero {
+    min-height: 560px;
+  }
+
+  .hero-inner {
+    min-height: 560px;
+  }
+
+  .hero-actions {
+    width: 100%;
+  }
+
+  .prize-strip {
+    padding: 28px 0;
+  }
+
+  .step {
+    grid-template-columns: 28px 1fr;
+    gap: 14px;
+  }
+
+  .step p {
+    font-size: 1.2rem;
+  }
+
+  .footer-main,
+  .footer-bottom {
+    grid-template-columns: 1fr;
+  }
+
+  .trail-shell {
+    width: min(100vw - 48px, 1540px);
+  }
+
+  .trail-title {
+    margin-top: 18px;
+  }
+
+  .trail-qr-section {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .trail-qr-inner {
+    grid-template-columns: 1fr;
+    width: min(100vw - 48px, 1540px);
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .trail-qr-card {
+    max-width: 320px;
+    justify-self: end;
+  }
+
+  .trail-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .trail-action-button {
+    width: min(494px, 100%);
+  }
+
+  .trail-toggle-menu {
+    left: 18px;
+    bottom: 72px;
+    width: 236px;
+  }
+
+  .trail-placement-confirm {
+    right: 18px;
+    bottom: 18px;
+  }
+
+  .photo-detail-card {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  :root {
+    --content-width: min(100vw - 28px, 1080px);
+  }
+
+  .header-tools {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .search-box input {
+    width: min(240px, 68vw);
+    height: 50px;
+  }
+
+  .hero {
+    width: 100%;
+    border-radius: 0;
+  }
+
+  .hero::before {
+    display: none;
+  }
+
+  .hero h1 {
+    font-size: clamp(3rem, 17vw, 4.5rem);
+  }
+
+  .hero-actions {
+    gap: 12px;
+  }
+
+  .secondary-cta,
+  .cta-button {
+    width: min(320px, 100%);
+  }
+
+  .hero-orb {
+    max-width: 68px;
+  }
+
+  .prize-strip {
+    padding: 24px 0;
+  }
+
+  .prize-track {
+    gap: 18px;
+    padding: 0 18px;
+  }
+
+  .prize-card {
+    width: 118px;
+    min-width: 118px;
+    min-height: 130px;
+  }
+
+  .prize-icon {
+    width: 100px;
+    height: 100px;
+  }
+
+  .hunt-browser {
+    grid-template-columns: 1fr;
+  }
+
+  .arrow-button {
+    display: none;
+  }
+
+  .hunt-grid.static-hunts,
+  .hunt-grid,
+  .footer-highlights {
+    grid-template-columns: 1fr;
+  }
+
+  .hunt-grid.static-hunts {
+    width: min(320px, 100%);
+    justify-items: center;
+  }
+
+  .map-card {
+    min-height: 280px;
+  }
+
+  .trail-main {
+    padding-bottom: 40px;
+  }
+
+  .trail-shell {
+    width: min(100vw - 28px, 1540px);
+  }
+
+  .trail-map-frame {
+    border-radius: 18px;
+  }
+
+  .trail-about {
+    padding-top: 32px;
+  }
+
+  .trail-progress-status {
+    top: 4.8%;
+    padding: 6px 14px;
+    font-size: 0.92rem;
+  }
+
+  .trail-progress-cover {
+    top: 2.6%;
+    left: 2%;
+    width: 38%;
+    height: 22%;
+    border-radius: 18px;
+  }
+
+  .trail-qr-section {
+    padding: 0;
+  }
+
+  .trail-qr-inner {
+    gap: 22px;
+    width: min(100vw - 28px, 1540px);
+    padding: 24px 20px;
+  }
+
+  .trail-qr-card {
+    max-width: 220px;
+    justify-self: center;
+  }
+
+  .trail-buttons {
+    gap: 14px;
+  }
+
+  .trail-toggle-menu {
+    left: 10px;
+    bottom: 62px;
+    width: 190px;
+  }
+
+  .trail-toggle-menu-copy {
+    gap: 10px;
+    padding: 14px 14px 0 14px;
+  }
+
+  .trail-toggle-row {
+    font-size: 0.72rem;
+    padding-right: 48px;
+    min-height: 18px;
+  }
+
+  .trail-toggle-row input {
+    width: 32px;
+    height: 14px;
+  }
+
+  .trail-toggle-row input::after {
+    top: 1px;
+    right: 1px;
+    width: 8px;
+    height: 8px;
+  }
+
+  .trail-toggle-row input:checked::after {
+    transform: translateX(-16px);
+  }
+
+  .trail-upload-button {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    padding: 8px 10px;
+    font-size: 0.72rem;
+  }
+
+  .trail-placement-confirm {
+    right: 10px;
+    bottom: 10px;
+    padding: 10px 12px;
+    font-size: 0.78rem;
+  }
+
+  .trail-photo-marker {
+    width: 68px;
+    height: 68px;
+  }
+
+  .trail-photo-marker img {
+    height: calc(100% - 18px);
+  }
+
+  .trail-photo-meta {
+    height: 18px;
+    font-size: 0.55rem;
+  }
+}

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trinket Trails</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&amp;family=Manrope:wght@400;500;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./script.js" defer></script>
+  </head>
+  <body id="top">
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Forest Park Forever home">
+        <img
+          class="brand-logo"
+          src="./assets/fpf-logo-cropped.png"
+          alt="Forest Park Forever"
+        />
+      </a>
+
+      <nav class="main-nav" aria-label="Primary">
+        <a href="#about">About</a>
+        <a href="#visit">Visit</a>
+        <a href="#support">Support</a>
+        <a href="#learn">Learn</a>
+        <a href="#blog">Blog</a>
+        <a class="donate-link" href="#footer">Donate Now</a>
+      </nav>
+
+      <div class="header-tools">
+        <label class="search-box">
+          <span class="visually-hidden">Search</span>
+          <input type="search" placeholder="Search" />
+          <span class="search-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" role="presentation">
+              <circle cx="11" cy="11" r="6.5"></circle>
+              <path d="M16 16L21 21"></path>
+            </svg>
+          </span>
+        </label>
+        <button class="cart-button" type="button" aria-label="Cart">
+          <svg viewBox="0 0 28 24" role="presentation">
+            <path d="M2 2H5L7.2 14H21.2L24 6H8.4"></path>
+            <circle cx="10" cy="20" r="1.5"></circle>
+            <circle cx="20" cy="20" r="1.5"></circle>
+          </svg>
+          <span class="cart-count">0</span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" id="visit">
+        <div class="hero-orbs" aria-hidden="true">
+          <img class="hero-orb" data-trinket="coin" src="./assets/hero-trinkets/coin.png" alt="" />
+          <img class="hero-orb" data-trinket="globe" src="./assets/hero-trinkets/globe.png" alt="" />
+          <img class="hero-orb" data-trinket="owl" src="./assets/hero-trinkets/owl.png" alt="" />
+          <img class="hero-orb" data-trinket="heart-box" src="./assets/hero-trinkets/heart-box.png" alt="" />
+        </div>
+        <div class="hero-inner">
+          <h1>Trinket Trails</h1>
+          <div class="hero-actions">
+            <a class="cta-button" href="#hunts">View Scavenger Hunts</a>
+            <button class="cta-button secondary-cta" type="button" data-open-passport>
+              View your passport
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-section" id="about">
+        <h2>About Trinket Trails</h2>
+        <p>
+          Explore Forest Park like never before with Trinket Trails, an interactive trail
+          experience that guides visitors through landmarks, stories, and hidden moments
+          using maps, riddles, and collectible rewards.
+        </p>
+        <p>
+          Complete trails, collect digital stamps, and earn real-world trinkets that tie
+          each journey back to the art, ecology, and history of the park.
+        </p>
+      </section>
+      <div class="mockup-divider" aria-hidden="true"></div>
+
+      <section class="prize-section">
+        <div class="content-section section-heading">
+          <h2>Win Prizes!</h2>
+        </div>
+        <div class="prize-strip">
+          <div class="prize-track">
+            <article class="prize-card"><img class="prize-icon" src="./assets/prizes/prize-3.jpeg" alt="Prize trinket 3" /></article>
+            <article class="prize-card"><img class="prize-icon" src="./assets/prizes/prize-4.jpeg" alt="Prize trinket 4" /></article>
+            <article class="prize-card"><img class="prize-icon" src="./assets/prizes/prize-5.jpeg" alt="Prize trinket 5" /></article>
+            <article class="prize-card"><img class="prize-icon" src="./assets/prizes/prize-6.jpeg" alt="Prize trinket 6" /></article>
+            <article class="prize-card"><img class="prize-icon" src="./assets/prizes/prize-7.jpeg" alt="Prize trinket 7" /></article>
+            <article class="prize-card"><img class="prize-icon" src="./assets/prizes/prize-8.jpeg" alt="Prize trinket 8" /></article>
+            <article class="prize-card"><img class="prize-icon" src="./assets/prizes/prize-9.jpeg" alt="Prize trinket 9" /></article>
+            <article class="prize-card"><img class="prize-icon" src="./assets/prizes/prize-11.jpeg" alt="Prize trinket 11" /></article>
+            <article class="prize-card" aria-hidden="true"><img class="prize-icon" src="./assets/prizes/prize-3.jpeg" alt="" /></article>
+            <article class="prize-card" aria-hidden="true"><img class="prize-icon" src="./assets/prizes/prize-4.jpeg" alt="" /></article>
+            <article class="prize-card" aria-hidden="true"><img class="prize-icon" src="./assets/prizes/prize-5.jpeg" alt="" /></article>
+            <article class="prize-card" aria-hidden="true"><img class="prize-icon" src="./assets/prizes/prize-6.jpeg" alt="" /></article>
+            <article class="prize-card" aria-hidden="true"><img class="prize-icon" src="./assets/prizes/prize-7.jpeg" alt="" /></article>
+            <article class="prize-card" aria-hidden="true"><img class="prize-icon" src="./assets/prizes/prize-8.jpeg" alt="" /></article>
+            <article class="prize-card" aria-hidden="true"><img class="prize-icon" src="./assets/prizes/prize-9.jpeg" alt="" /></article>
+            <article class="prize-card" aria-hidden="true"><img class="prize-icon" src="./assets/prizes/prize-11.jpeg" alt="" /></article>
+          </div>
+        </div>
+        <div class="content-section prize-copy">
+          <p>
+            Every trail leaves you with something to remember it by. Trinkets are uniquely
+            tied to each experience and celebrate the landmarks, ecosystems, and stories
+            you encounter on the way.
+          </p>
+          <p>
+            With support from local partners and Forest Park Forever, each collectible
+            becomes a small reminder that exploration can leave a lasting imprint.
+          </p>
+        </div>
+      </section>
+      <div class="mockup-divider section-divider" aria-hidden="true"></div>
+
+      <section class="content-section how-section" id="learn">
+        <h2>How to Win?</h2>
+        <div class="steps">
+          <article class="step">
+            <div class="step-number">1</div>
+            <p>Pick the Trinket Trail you’d like to complete.</p>
+          </article>
+          <article class="step">
+            <div class="step-number">2</div>
+            <p>Go to the starting point and launch the trail guide on your phone.</p>
+          </article>
+          <article class="step">
+            <div class="step-number">3</div>
+            <p>Scan the QR code to open the Trail Tracker in the Forest Park app.</p>
+          </article>
+          <article class="step">
+            <div class="step-number">4</div>
+            <p>Follow clues, solve prompts, and have fun as you move through the hunt.</p>
+          </article>
+          <article class="step">
+            <div class="step-number">5</div>
+            <p>Scan the final QR code to confirm you’ve completed the trail.</p>
+          </article>
+          <article class="step">
+            <div class="step-number">6</div>
+            <p>Receive a stamp on your Trinket Trail passport and unlock your keepsake.</p>
+          </article>
+          <article class="step">
+            <div class="step-number">7</div>
+            <p>Head to the visitor center to claim your trinket and start the next trail.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="banner-callout">
+        <p>
+          Once you complete all of the trails and fill your Trinket Trail passport, you’ll
+          unlock the Ultimate Trinket.
+        </p>
+      </section>
+
+      <section class="content-section hunts-section" id="hunts">
+        <h2>Scavenger Hunts</h2>
+        <div class="hunt-grid static-hunts">
+          <a class="hunt-card-link" href="./ArtWalkPath.html" aria-label="Open Art Walk Path">
+            <article class="hunt-card walk-card">
+              <img src="./assets/walks/walk-1.png" alt="Art Walk icon" />
+              <span class="walk-card-label">Art Walk</span>
+            </article>
+          </a>
+          <a class="hunt-card-link" href="#hunts" aria-label="Nature Walk">
+            <article class="hunt-card walk-card">
+              <img src="./assets/walks/walk-3.png" alt="Nature Walk icon" />
+              <span class="walk-card-label">Nature Walk</span>
+            </article>
+          </a>
+          <a class="hunt-card-link" href="#hunts" aria-label="Animal Path">
+            <article class="hunt-card walk-card">
+              <img src="./assets/walks/walk-4.png" alt="Animal Path icon" />
+              <span class="walk-card-label">Animal Path</span>
+            </article>
+          </a>
+          <a class="hunt-card-link" href="#hunts" aria-label="Scultpure Stroll">
+            <article class="hunt-card walk-card">
+              <img src="./assets/walks/walk-2.png" alt="Scultpure Stroll icon" />
+              <span class="walk-card-label">Scultpure Stroll</span>
+            </article>
+          </a>
+        </div>
+      </section>
+      <div class="mockup-divider" aria-hidden="true"></div>
+
+      <section class="content-section map-section" id="support">
+        <h2>Trail Map</h2>
+        <div class="map-card"></div>
+      </section>
+    </main>
+
+    <footer class="site-footer" id="footer">
+      <div class="mockup-divider footer-divider" aria-hidden="true"></div>
+      <section class="footer-highlights" id="blog">
+        <article class="footer-story">
+          <div class="story-image story-one"></div>
+          <h3>Conservation Efforts</h3>
+        </article>
+        <article class="footer-story">
+          <div class="story-image story-two"></div>
+          <h3>Explore Forest Park with our Interactive Map</h3>
+        </article>
+        <article class="footer-story">
+          <div class="story-image story-three"></div>
+          <h3>Recreational Path Tips</h3>
+        </article>
+      </section>
+      <div class="mockup-divider footer-divider" aria-hidden="true"></div>
+
+      <section class="footer-main">
+        <div class="footer-brand">
+          <img
+            class="footer-brand-logo"
+            src="./assets/fpf-logo-cropped.png"
+            alt="Forest Park Forever"
+          />
+        </div>
+
+        <div class="footer-links">
+          <a href="#support">Ways to Support</a>
+          <a href="#visit">Events Calendar</a>
+          <a href="#hunts">Shop</a>
+          <a href="#about">Sign Up for E-News</a>
+        </div>
+      </section>
+
+      <section class="footer-bottom">
+        <div>
+          <strong>Forest Park Forever</strong>
+          <p>info@forestparkforever.org | 314.367.7275</p>
+          <p>5595 Grand Drive in Forest Park | St. Louis, MO 63112</p>
+        </div>
+        <a href="#top">Privacy Policy</a>
+        <div class="socials" aria-label="Social links">
+          <a href="#top" aria-label="Facebook">f</a>
+          <a href="#top" aria-label="Instagram">i</a>
+          <a href="#top" aria-label="LinkedIn">in</a>
+        </div>
+      </section>
+    </footer>
+
+    <dialog class="passport-dialog" data-passport-dialog>
+      <form class="passport-form" method="dialog" data-passport-form>
+        <h2>Passport Login</h2>
+        <p>Enter your email and password to open your Trinket Trails passport.</p>
+        <label class="passport-field">
+          <span>Email</span>
+          <input type="email" name="email" required />
+        </label>
+        <label class="passport-field">
+          <span>Password</span>
+          <input type="password" name="password" required />
+        </label>
+        <div class="passport-actions">
+          <button class="passport-button ghost-button" type="button" data-passport-cancel>
+            Cancel
+          </button>
+          <button class="passport-button" type="submit">Open Passport</button>
+        </div>
+      </form>
+    </dialog>
+  </body>
+</html>
