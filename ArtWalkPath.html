@@ -251,6 +251,9 @@
     <dialog class="finish-trail-dialog" data-finish-trail-reward-dialog>
       <div class="start-trail-card finish-trail-card">
         <h2>You just won a stamp!</h2>
+        <p class="finish-trail-save-note" data-finish-trail-save-note hidden>
+          Log in to save this stamp to your passport.
+        </p>
         <img
           class="finish-trail-stamp"
           src="./assets/passport-stamp-2.svg"
@@ -261,7 +264,14 @@
           <button class="passport-button ghost-button" type="button" data-finish-trail-close>
             Close
           </button>
-          <a class="passport-button finish-trail-passport-link" href="./Passport.html">
+          <button class="passport-button" type="button" data-finish-trail-save-login hidden>
+            Log In to Save
+          </button>
+          <a
+            class="passport-button finish-trail-passport-link"
+            href="./Passport.html"
+            data-finish-trail-passport-link
+          >
             View Passport
           </a>
         </div>
