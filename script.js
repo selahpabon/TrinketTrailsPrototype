@@ -5,6 +5,8 @@ const passportForm = document.querySelector("[data-passport-form]");
 const heroOrbs = Array.from(document.querySelectorAll(".hero-orb"));
 const AUTH_USER_KEY = "trinket-trails-auth-user";
 const ART_WALK_STARTED_KEY = "trinket-trails-art-walk-started";
+const ART_WALK_FINISHED_KEY = "trinket-trails-art-walk-finished";
+const ART_WALK_REWARD_PENDING_KEY = "trinket-trails-art-walk-reward-pending";
 const ART_WALK_STAMPS_KEY = "trinket-trails-art-walk-stamps";
 
 const buildUserKey = (email, password) =>
@@ -100,6 +102,8 @@ const navigationEntry = performance.getEntriesByType("navigation")[0];
 if (navigationEntry && navigationEntry.type === "reload") {
   window.sessionStorage.removeItem(AUTH_USER_KEY);
   window.sessionStorage.removeItem(ART_WALK_STARTED_KEY);
+  window.sessionStorage.removeItem(ART_WALK_FINISHED_KEY);
+  window.sessionStorage.removeItem(ART_WALK_REWARD_PENDING_KEY);
 }
 
 if (passportTrigger && passportDialog && passportCancel && passportForm) {
@@ -137,6 +141,8 @@ if (passportTrigger && passportDialog && passportCancel && passportForm) {
 
     window.sessionStorage.setItem(AUTH_USER_KEY, buildUserKey(email, password));
     window.sessionStorage.removeItem(ART_WALK_STARTED_KEY);
+    window.sessionStorage.removeItem(ART_WALK_FINISHED_KEY);
+    window.sessionStorage.removeItem(ART_WALK_REWARD_PENDING_KEY);
     window.location.href = "./Passport.html";
   });
 }
@@ -226,6 +232,7 @@ const finishTrailNo = document.querySelector("[data-finish-trail-no]");
 const finishTrailYes = document.querySelector("[data-finish-trail-yes]");
 const finishTrailClose = document.querySelector("[data-finish-trail-close]");
 const passportEarnedStamp = document.querySelector("[data-passport-earned-stamp]");
+const trailQrLink = document.querySelector("[data-trail-qr-link]");
 
 const syncPassportStamp = () => {
   if (!passportEarnedStamp) {
@@ -235,7 +242,31 @@ const syncPassportStamp = () => {
   passportEarnedStamp.hidden = !userHasArtWalkStamp();
 };
 
+const syncArtWalkTrackerState = () => {
+  if (!trailProgress) {
+    return;
+  }
+
+  const started = window.sessionStorage.getItem(ART_WALK_STARTED_KEY) === "true";
+  const finished = window.sessionStorage.getItem(ART_WALK_FINISHED_KEY) === "true";
+
+  trailProgress.classList.toggle("is-started", started);
+
+  if (startTrailTrigger) {
+    startTrailTrigger.hidden = started;
+  }
+
+  if (finishTrailTrigger) {
+    finishTrailTrigger.hidden = !started || finished;
+  }
+
+  if (trailQrLink) {
+    trailQrLink.href = started && !finished ? "./finish-trail.html" : "./start-trail.html";
+  }
+};
+
 syncPassportStamp();
+syncArtWalkTrackerState();
 
 if (startTrailTrigger && startTrailDialog && startTrailNo && startTrailYes) {
   startTrailTrigger.addEventListener("click", () => {
@@ -247,12 +278,9 @@ if (startTrailTrigger && startTrailDialog && startTrailNo && startTrailYes) {
   });
 
   startTrailYes.addEventListener("click", () => {
-    if (trailProgress) {
-      trailProgress.classList.add("is-started");
-    }
-
     window.sessionStorage.setItem(ART_WALK_STARTED_KEY, "true");
-    startTrailTrigger.hidden = true;
+    window.sessionStorage.removeItem(ART_WALK_FINISHED_KEY);
+    syncArtWalkTrackerState();
     startTrailDialog.close();
   });
 
@@ -300,7 +328,10 @@ if (
     }
 
     setUserStampEarned(currentUserKey);
+    window.sessionStorage.setItem(ART_WALK_FINISHED_KEY, "true");
+    window.sessionStorage.setItem(ART_WALK_REWARD_PENDING_KEY, "true");
     syncPassportStamp();
+    syncArtWalkTrackerState();
     finishTrailDialog.close();
     finishTrailRewardDialog.showModal();
   });
@@ -334,6 +365,11 @@ if (
       finishTrailRewardDialog.close();
     }
   });
+
+  if (window.sessionStorage.getItem(ART_WALK_REWARD_PENDING_KEY) === "true") {
+    window.sessionStorage.removeItem(ART_WALK_REWARD_PENDING_KEY);
+    finishTrailRewardDialog.showModal();
+  }
 }
 
 if (
