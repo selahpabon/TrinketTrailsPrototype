@@ -7,6 +7,7 @@ const AUTH_USER_KEY = "trinket-trails-auth-user";
 const ART_WALK_STARTED_KEY = "trinket-trails-art-walk-started";
 const ART_WALK_FINISHED_KEY = "trinket-trails-art-walk-finished";
 const ART_WALK_REWARD_PENDING_KEY = "trinket-trails-art-walk-reward-pending";
+const ART_WALK_STAMP_PENDING_KEY = "trinket-trails-art-walk-stamp-pending";
 const ART_WALK_STAMPS_KEY = "trinket-trails-art-walk-stamps";
 const ART_WALK_PHOTOS_KEY = "trinket-trails-art-walk-photos";
 
@@ -57,6 +58,24 @@ const setUserSavedPhotos = (userKey, photos) => {
   const photoStore = getPhotoStore();
   photoStore[userKey] = photos;
   window.localStorage.setItem(ART_WALK_PHOTOS_KEY, JSON.stringify(photoStore));
+};
+
+const markStampPending = () => {
+  window.sessionStorage.setItem(ART_WALK_STAMP_PENDING_KEY, "true");
+};
+
+const clearPendingStamp = () => {
+  window.sessionStorage.removeItem(ART_WALK_STAMP_PENDING_KEY);
+};
+
+const savePendingStampForUser = (userKey) => {
+  if (!userKey || window.sessionStorage.getItem(ART_WALK_STAMP_PENDING_KEY) !== "true") {
+    return false;
+  }
+
+  setUserStampEarned(userKey);
+  clearPendingStamp();
+  return true;
 };
 
 const userHasArtWalkStamp = () => {
@@ -127,6 +146,7 @@ if (navigationEntry && navigationEntry.type === "reload") {
   window.sessionStorage.removeItem(ART_WALK_STARTED_KEY);
   window.sessionStorage.removeItem(ART_WALK_FINISHED_KEY);
   window.sessionStorage.removeItem(ART_WALK_REWARD_PENDING_KEY);
+  window.sessionStorage.removeItem(ART_WALK_STAMP_PENDING_KEY);
 }
 
 if (passportTrigger && passportDialog && passportCancel && passportForm) {
@@ -162,10 +182,11 @@ if (passportTrigger && passportDialog && passportCancel && passportForm) {
       return;
     }
 
-    window.sessionStorage.setItem(AUTH_USER_KEY, buildUserKey(email, password));
-    window.sessionStorage.removeItem(ART_WALK_STARTED_KEY);
-    window.sessionStorage.removeItem(ART_WALK_FINISHED_KEY);
-    window.sessionStorage.removeItem(ART_WALK_REWARD_PENDING_KEY);
+    const userKey = buildUserKey(email, password);
+    window.sessionStorage.setItem(AUTH_USER_KEY, userKey);
+    if (savePendingStampForUser(userKey)) {
+      syncPassportStamp();
+    }
     window.location.href = "./Passport.html";
   });
 }
@@ -253,8 +274,12 @@ if (passportGateDialog && passportGateForm && passportGateCancel) {
     const userKey = buildUserKey(email, password);
     window.sessionStorage.setItem(AUTH_USER_KEY, userKey);
 
-    if (saveStampAfterLogin && window.sessionStorage.getItem(ART_WALK_FINISHED_KEY) === "true") {
-      setUserStampEarned(userKey);
+    if (saveStampAfterLogin) {
+      window.sessionStorage.setItem(ART_WALK_FINISHED_KEY, "true");
+      markStampPending();
+    }
+
+    if (savePendingStampForUser(userKey)) {
       syncPassportStamp();
     }
 
@@ -424,7 +449,10 @@ if (
 
     if (currentUserKey) {
       setUserStampEarned(currentUserKey);
+      clearPendingStamp();
       syncPassportStamp();
+    } else {
+      markStampPending();
     }
 
     window.sessionStorage.setItem(ART_WALK_FINISHED_KEY, "true");
