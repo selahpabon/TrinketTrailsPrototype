@@ -15,6 +15,10 @@ const buildUserKey = (email, password) =>
   `${email.trim().toLowerCase()}::${password.trim()}`;
 
 const getCurrentUserKey = () => window.sessionStorage.getItem(AUTH_USER_KEY) || "";
+const getUsernameFromUserKey = (userKey) => {
+  const email = String(userKey || "").split("::")[0] || "";
+  return email.split("@")[0] || "";
+};
 
 const getStampStore = () => {
   try {
@@ -311,6 +315,7 @@ const confirmPlacement = document.querySelector("[data-photo-confirm]");
 const photoDetailDialog = document.querySelector("[data-photo-detail-dialog]");
 const photoDetailImage = document.querySelector("[data-photo-detail-image]");
 const photoDetailName = document.querySelector("[data-photo-detail-name]");
+const photoDetailUploader = document.querySelector("[data-photo-detail-uploader]");
 const photoDetailDate = document.querySelector("[data-photo-detail-date]");
 const photoDetailDescription = document.querySelector("[data-photo-detail-description]");
 const photoDetailClose = document.querySelector("[data-photo-detail-close]");
@@ -520,15 +525,80 @@ if (
   photoDetailDialog &&
   photoDetailImage &&
   photoDetailName &&
+  photoDetailUploader &&
   photoDetailDate &&
   photoDetailDescription &&
   photoDetailClose
 ) {
-  const trailPhotos = [];
+  const trailPhotos = [
+    {
+      id: "others-slam-1",
+      owner: "others",
+      src: "./assets/trail-photos/slam-1.png",
+      name: "Entrance of SLAM",
+      uploader: "@ivytrails",
+      date: "",
+      description: "Loved how the light opened up right at the start.",
+      x: 0.086,
+      y: 0.205,
+      size: 92,
+      pending: false,
+    },
+    {
+      id: "others-project-2",
+      owner: "others",
+      src: "./assets/trail-photos/project-2.png",
+      name: "Museum Garden Walk",
+      uploader: "@mossymap",
+      date: "",
+      description: "This stretch felt quiet in the best way.",
+      x: 0.392,
+      y: 0.262,
+      size: 92,
+      pending: false,
+    },
+    {
+      id: "others-project-3",
+      owner: "others",
+      src: "./assets/trail-photos/project-3.png",
+      name: "Clearing Before the End",
+      uploader: "@petalpath",
+      date: "",
+      description: "Everything looked extra bright on the walk back through here.",
+      x: 0.748,
+      y: 0.572,
+      size: 92,
+      pending: false,
+    },
+    {
+      id: "others-project-4",
+      owner: "others",
+      src: "./assets/trail-photos/project-4.png",
+      name: "Inside the Jewel Box",
+      uploader: "@lanternloop",
+      date: "",
+      description: "Such a pretty ending spot for the trail.",
+      x: 0.885,
+      y: 0.608,
+      size: 92,
+      pending: false,
+    },
+  ];
   let pendingPhotoId = null;
   let dragState = null;
 
   const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+  const randomSharedDate = () => {
+    const now = new Date();
+    const daysBack = Math.floor(Math.random() * 120) + 3;
+    const date = new Date(now);
+    date.setDate(now.getDate() - daysBack);
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
   const fileToDataUrl = (file) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -537,14 +607,21 @@ if (
       reader.readAsDataURL(file);
     });
 
+  trailPhotos.forEach((photo) => {
+    if (photo.owner === "others" && !photo.date) {
+      photo.date = randomSharedDate();
+    }
+  });
+
   const serializeUserPhotos = () =>
     trailPhotos
       .filter((photo) => photo.owner === "yours" && !photo.pending)
-      .map(({ id, owner, src, name, date, description, x, y }) => ({
+      .map(({ id, owner, src, name, uploader, date, description, x, y }) => ({
         id,
         owner,
         src,
         name,
+        uploader,
         date,
         description,
         x,
@@ -615,6 +692,10 @@ if (
       if (photo.pending) {
         marker.classList.add("is-pending");
       }
+      if (photo.size) {
+        marker.style.width = `${photo.size}px`;
+        marker.style.height = `${photo.size}px`;
+      }
       marker.style.left = `${photo.x * 100}%`;
       marker.style.top = `${photo.y * 100}%`;
       marker.title = photo.description
@@ -625,11 +706,6 @@ if (
       image.src = photo.src;
       image.alt = `${photo.name} trail photo`;
       marker.appendChild(image);
-
-      const meta = document.createElement("span");
-      meta.className = "trail-photo-meta";
-      meta.textContent = photo.name;
-      marker.appendChild(meta);
 
       if (photo.pending) {
         marker.addEventListener("pointerdown", (event) => {
@@ -656,6 +732,7 @@ if (
           photoDetailImage.src = photo.src;
           photoDetailImage.alt = `${photo.name} trail photo`;
           photoDetailName.textContent = photo.name;
+          photoDetailUploader.textContent = photo.uploader || "@trailfriend";
           photoDetailDate.textContent = photo.date;
           photoDetailDescription.textContent =
             photo.description || "No description was added for this photo.";
@@ -730,6 +807,9 @@ if (
       owner: "yours",
       src: photoSrc,
       name,
+      uploader: getUsernameFromUserKey(getCurrentUserKey())
+        ? `@${getUsernameFromUserKey(getCurrentUserKey())}`
+        : "@guest",
       date,
       description,
       x: 0.24,
