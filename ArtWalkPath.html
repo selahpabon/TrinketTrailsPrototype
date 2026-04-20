@@ -216,27 +216,6 @@
       </form>
     </dialog>
 
-    <dialog class="passport-dialog" data-passport-gate-dialog>
-      <form class="passport-form" method="dialog" data-passport-gate-form>
-        <h2>Log in to view your passport</h2>
-        <p>Use the same email and password you want tied to your trail progress.</p>
-        <label class="passport-field">
-          <span>Email</span>
-          <input type="email" name="email" required />
-        </label>
-        <label class="passport-field">
-          <span>Password</span>
-          <input type="password" name="password" required />
-        </label>
-        <div class="passport-actions">
-          <button class="passport-button ghost-button" type="button" data-passport-gate-cancel>
-            Cancel
-          </button>
-          <button class="passport-button" type="submit">Continue</button>
-        </div>
-      </form>
-    </dialog>
-
     <dialog class="finish-trail-dialog" data-finish-trail-dialog>
       <div class="start-trail-card finish-trail-card">
         <h2>Did you finish the trail?</h2>
@@ -252,9 +231,6 @@
     <dialog class="finish-trail-dialog" data-finish-trail-reward-dialog>
       <div class="start-trail-card finish-trail-card">
         <h2>You just won a stamp!</h2>
-        <p class="finish-trail-save-note" data-finish-trail-save-note hidden>
-          Log in to save this stamp to your passport.
-        </p>
         <img
           class="finish-trail-stamp"
           src="./assets/passport-stamp-2.svg"
@@ -264,9 +240,6 @@
         <div class="passport-actions start-trail-actions">
           <button class="passport-button ghost-button" type="button" data-finish-trail-close>
             Close
-          </button>
-          <button class="passport-button" type="button" data-finish-trail-save-login hidden>
-            Log In to Save
           </button>
           <a
             class="passport-button finish-trail-passport-link"

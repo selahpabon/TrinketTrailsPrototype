@@ -66,10 +66,11 @@
           <h1>Trinket Trails</h1>
           <div class="hero-actions">
             <a class="cta-button" href="#hunts">View Scavenger Hunts</a>
-            <button class="cta-button secondary-cta" type="button" data-open-passport>
+            <a class="cta-button secondary-cta" href="./Passport.html">
               View your passport
-            </button>
+            </a>
           </div>
+          <button class="hero-login-button" type="button" data-login-trigger>Login</button>
         </div>
       </section>
 
@@ -169,7 +170,12 @@
       <section class="content-section hunts-section" id="hunts">
         <h2>Scavenger Hunts</h2>
         <div class="hunt-grid static-hunts">
-          <a class="hunt-card-link" href="./ArtWalkPath.html" aria-label="Open Art Walk Path">
+          <a
+            class="hunt-card-link"
+            href="./ArtWalkPath.html"
+            aria-label="Open Art Walk Path"
+            data-requires-login
+          >
             <article class="hunt-card walk-card">
               <img src="./assets/walks/walk-1.png" alt="Art Walk icon" />
               <span class="walk-card-label">Art Walk</span>
@@ -259,25 +265,5 @@
       </section>
     </footer>
 
-    <dialog class="passport-dialog" data-passport-dialog>
-      <form class="passport-form" method="dialog" data-passport-form>
-        <h2>Passport Login</h2>
-        <p>Enter your email and password to open your Trinket Trails passport.</p>
-        <label class="passport-field">
-          <span>Email</span>
-          <input type="email" name="email" required />
-        </label>
-        <label class="passport-field">
-          <span>Password</span>
-          <input type="password" name="password" required />
-        </label>
-        <div class="passport-actions">
-          <button class="passport-button ghost-button" type="button" data-passport-cancel>
-            Cancel
-          </button>
-          <button class="passport-button" type="submit">Open Passport</button>
-        </div>
-      </form>
-    </dialog>
   </body>
 </html>

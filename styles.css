@@ -274,9 +274,37 @@ input {
 }
 
 .hero-actions {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 16px;
-  justify-items: center;
+}
+
+.hero-login-button {
+  margin-top: 16px;
+  min-width: 132px;
+  min-height: 48px;
+  padding: 12px 22px;
+  border: 2px solid var(--button-primary-border);
+  border-radius: 999px;
+  background: var(--button-primary);
+  color: #ffffff;
+  font-size: 0.98rem;
+  font-weight: 800;
+  text-shadow: 0 9px 22px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.hero-login-button:hover,
+.hero-login-button:focus-visible {
+  background: var(--button-primary-hover);
+  border-color: var(--button-primary-border);
+  transform: translateY(-1px);
 }
 
 .hero h1,
@@ -298,6 +326,8 @@ input {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-width: 258px;
+  min-height: 66px;
   padding: 20px 34px;
   border: 2px solid var(--button-primary-border);
   border-radius: 18px;
@@ -324,7 +354,6 @@ input {
   border-color: var(--button-secondary-border);
   background: var(--button-secondary);
   color: #ffffff;
-  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.16);
 }
 
 .secondary-cta:hover,
@@ -711,6 +740,13 @@ input {
   margin: 0;
   color: var(--muted);
   line-height: 1.7;
+}
+
+.login-error {
+  margin: 0;
+  color: #a33c30;
+  font-weight: 700;
+  line-height: 1.5;
 }
 
 .passport-field {

@@ -13,24 +13,14 @@
   <body>
     <div class="panel"><h1>You have ended the trail!</h1></div>
     <script>
-      const AUTH_USER_KEY = 'trinket-trails-auth-user';
       const ART_WALK_STARTED_KEY = 'trinket-trails-art-walk-started';
       const ART_WALK_FINISHED_KEY = 'trinket-trails-art-walk-finished';
       const ART_WALK_REWARD_PENDING_KEY = 'trinket-trails-art-walk-reward-pending';
       const ART_WALK_STAMP_PENDING_KEY = 'trinket-trails-art-walk-stamp-pending';
-      const ART_WALK_STAMPS_KEY = 'trinket-trails-art-walk-stamps';
-      const currentUserKey = sessionStorage.getItem(AUTH_USER_KEY) || '';
       if (sessionStorage.getItem(ART_WALK_STARTED_KEY) === 'true') {
         sessionStorage.setItem(ART_WALK_FINISHED_KEY, 'true');
         sessionStorage.setItem(ART_WALK_REWARD_PENDING_KEY, 'true');
         sessionStorage.setItem(ART_WALK_STAMP_PENDING_KEY, 'true');
-        if (currentUserKey) {
-          let store = {};
-          try { store = JSON.parse(localStorage.getItem(ART_WALK_STAMPS_KEY) || '{}'); } catch {}
-          store[currentUserKey] = true;
-          localStorage.setItem(ART_WALK_STAMPS_KEY, JSON.stringify(store));
-          sessionStorage.removeItem(ART_WALK_STAMP_PENDING_KEY);
-        }
       }
       setTimeout(() => { window.location.href = './ArtWalkPath.html'; }, 1200);
     </script>

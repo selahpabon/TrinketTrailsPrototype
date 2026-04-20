@@ -1,95 +1,166 @@
-const passportTrigger = document.querySelector("[data-open-passport]");
-const passportDialog = document.querySelector("[data-passport-dialog]");
-const passportCancel = document.querySelector("[data-passport-cancel]");
-const passportForm = document.querySelector("[data-passport-form]");
 const heroOrbs = Array.from(document.querySelectorAll(".hero-orb"));
-const AUTH_USER_KEY = "trinket-trails-auth-user";
+const loginTrigger = document.querySelector("[data-login-trigger]");
+const ACTIVE_USER_KEY = "trinket-trails-active-user";
+const USER_DATABASE_KEY = "trinket-trails-users-db";
 const ART_WALK_STARTED_KEY = "trinket-trails-art-walk-started";
 const ART_WALK_FINISHED_KEY = "trinket-trails-art-walk-finished";
 const ART_WALK_REWARD_PENDING_KEY = "trinket-trails-art-walk-reward-pending";
 const ART_WALK_STAMP_PENDING_KEY = "trinket-trails-art-walk-stamp-pending";
-const ART_WALK_STAMPS_KEY = "trinket-trails-art-walk-stamps";
-const ART_WALK_PHOTOS_KEY = "trinket-trails-art-walk-photos";
 
-const buildUserKey = (email, password) =>
-  `${email.trim().toLowerCase()}::${password.trim()}`;
+const normalizeEmail = (value) => String(value || "").trim().toLowerCase();
+const getUsernameFromEmail = (email) => normalizeEmail(email).split("@")[0] || "";
 
-const getCurrentUserKey = () => window.sessionStorage.getItem(AUTH_USER_KEY) || "";
-const getUsernameFromUserKey = (userKey) => {
-  const email = String(userKey || "").split("::")[0] || "";
-  return email.split("@")[0] || "";
-};
-
-const getStampStore = () => {
+const getUserDatabase = () => {
   try {
-    return JSON.parse(window.localStorage.getItem(ART_WALK_STAMPS_KEY) || "{}");
+    return JSON.parse(window.localStorage.getItem(USER_DATABASE_KEY) || "{}");
   } catch {
     return {};
   }
 };
 
-const setUserStampEarned = (userKey) => {
-  if (!userKey) {
+const setUserDatabase = (database) => {
+  window.localStorage.setItem(USER_DATABASE_KEY, JSON.stringify(database));
+};
+
+const getActiveUserEmail = () =>
+  normalizeEmail(window.sessionStorage.getItem(ACTIVE_USER_KEY) || "");
+
+const getActiveUserRecord = () => {
+  const email = getActiveUserEmail();
+  if (!email) {
+    return null;
+  }
+
+  return getUserDatabase()[email] || null;
+};
+
+const isUserSessionActive = () => Boolean(getActiveUserEmail() && getActiveUserRecord());
+
+const ensureUserAccount = (email, password) => {
+  const normalizedEmail = normalizeEmail(email);
+  const cleanPassword = String(password || "").trim();
+
+  if (!normalizedEmail || !cleanPassword) {
+    return {
+      ok: false,
+      error: "Please enter both an email and password.",
+    };
+  }
+
+  const database = getUserDatabase();
+  const existingUser = database[normalizedEmail];
+
+  if (existingUser && existingUser.password !== cleanPassword) {
+    return {
+      ok: false,
+      error: "That email already has a different password.",
+    };
+  }
+
+  database[normalizedEmail] = {
+    email: normalizedEmail,
+    password: cleanPassword,
+    stamps: {
+      artWalk: Boolean(existingUser?.stamps?.artWalk),
+    },
+    photos: {
+      artWalk: Array.isArray(existingUser?.photos?.artWalk)
+        ? existingUser.photos.artWalk
+        : [],
+    },
+  };
+
+  setUserDatabase(database);
+  window.sessionStorage.setItem(ACTIVE_USER_KEY, normalizedEmail);
+
+  return {
+    ok: true,
+    email: normalizedEmail,
+    user: database[normalizedEmail],
+  };
+};
+
+const getUserHasArtWalkStamp = (email = getActiveUserEmail()) => {
+  const normalizedEmail = normalizeEmail(email);
+  if (!normalizedEmail) {
+    return false;
+  }
+
+  return Boolean(getUserDatabase()[normalizedEmail]?.stamps?.artWalk);
+};
+
+const setUserArtWalkStamp = (email = getActiveUserEmail()) => {
+  const normalizedEmail = normalizeEmail(email);
+  if (!normalizedEmail) {
     return;
   }
 
-  const stampStore = getStampStore();
-  stampStore[userKey] = true;
-  window.localStorage.setItem(ART_WALK_STAMPS_KEY, JSON.stringify(stampStore));
-};
-
-const getPhotoStore = () => {
-  try {
-    return JSON.parse(window.localStorage.getItem(ART_WALK_PHOTOS_KEY) || "{}");
-  } catch {
-    return {};
+  const database = getUserDatabase();
+  const existingUser = database[normalizedEmail];
+  if (!existingUser) {
+    return;
   }
+
+  existingUser.stamps = {
+    ...(existingUser.stamps || {}),
+    artWalk: true,
+  };
+  database[normalizedEmail] = existingUser;
+  setUserDatabase(database);
 };
 
-const getUserSavedPhotos = (userKey) => {
-  if (!userKey) {
+const getUserSavedPhotos = (email = getActiveUserEmail()) => {
+  const normalizedEmail = normalizeEmail(email);
+  if (!normalizedEmail) {
     return [];
   }
 
-  return Array.isArray(getPhotoStore()[userKey]) ? getPhotoStore()[userKey] : [];
+  return Array.isArray(getUserDatabase()[normalizedEmail]?.photos?.artWalk)
+    ? getUserDatabase()[normalizedEmail].photos.artWalk
+    : [];
 };
 
-const setUserSavedPhotos = (userKey, photos) => {
-  if (!userKey) {
+const setUserSavedPhotos = (photos, email = getActiveUserEmail()) => {
+  const normalizedEmail = normalizeEmail(email);
+  if (!normalizedEmail) {
     return;
   }
 
-  const photoStore = getPhotoStore();
-  photoStore[userKey] = photos;
-  window.localStorage.setItem(ART_WALK_PHOTOS_KEY, JSON.stringify(photoStore));
+  const database = getUserDatabase();
+  const existingUser = database[normalizedEmail];
+  if (!existingUser) {
+    return;
+  }
+
+  existingUser.photos = {
+    ...(existingUser.photos || {}),
+    artWalk: photos,
+  };
+  database[normalizedEmail] = existingUser;
+  setUserDatabase(database);
 };
 
-const markStampPending = () => {
-  window.sessionStorage.setItem(ART_WALK_STAMP_PENDING_KEY, "true");
+const syncLoginButton = () => {
+  if (!loginTrigger) {
+    return;
+  }
+
+  const active = isUserSessionActive();
+  loginTrigger.textContent = active ? "Log out" : "Login";
+  loginTrigger.dataset.activeSession = active ? "true" : "false";
 };
 
-const clearPendingStamp = () => {
+const consumePendingStampForActiveUser = () => {
+  if (
+    window.sessionStorage.getItem(ART_WALK_STAMP_PENDING_KEY) !== "true" ||
+    !isUserSessionActive()
+  ) {
+    return false;
+  }
+
+  setUserArtWalkStamp();
   window.sessionStorage.removeItem(ART_WALK_STAMP_PENDING_KEY);
-};
-
-const savePendingStampForUser = (userKey) => {
-  if (!userKey || window.sessionStorage.getItem(ART_WALK_STAMP_PENDING_KEY) !== "true") {
-    return false;
-  }
-
-  setUserStampEarned(userKey);
-  clearPendingStamp();
   return true;
-};
-
-const userHasArtWalkStamp = () => {
-  const userKey = getCurrentUserKey();
-
-  if (!userKey) {
-    return false;
-  }
-
-  return Boolean(getStampStore()[userKey]);
 };
 
 if (heroOrbs.length) {
@@ -144,164 +215,231 @@ if (heroOrbs.length) {
   });
 }
 
-const navigationEntry = performance.getEntriesByType("navigation")[0];
-if (navigationEntry && navigationEntry.type === "reload") {
-  window.sessionStorage.removeItem(AUTH_USER_KEY);
-  window.sessionStorage.removeItem(ART_WALK_STARTED_KEY);
-  window.sessionStorage.removeItem(ART_WALK_FINISHED_KEY);
-  window.sessionStorage.removeItem(ART_WALK_REWARD_PENDING_KEY);
-  window.sessionStorage.removeItem(ART_WALK_STAMP_PENDING_KEY);
-}
+const loginDialog = document.createElement("dialog");
+loginDialog.className = "passport-dialog";
+loginDialog.dataset.loginDialog = "";
+loginDialog.innerHTML = `
+  <form class="passport-form" method="dialog" data-login-form>
+    <h2 data-login-title>Log in to continue</h2>
+    <p data-login-copy>Use your email and password to save or continue your Trinket Trails progress.</p>
+    <p class="login-error" data-login-error hidden></p>
+    <label class="passport-field">
+      <span>Email</span>
+      <input type="email" name="email" required />
+    </label>
+    <label class="passport-field">
+      <span>Password</span>
+      <input type="password" name="password" required />
+    </label>
+    <div class="passport-actions">
+      <button class="passport-button ghost-button" type="button" data-login-cancel>
+        Cancel
+      </button>
+      <button class="passport-button" type="submit">Log In</button>
+    </div>
+  </form>
+`;
+document.body.appendChild(loginDialog);
 
-if (passportTrigger && passportDialog && passportCancel && passportForm) {
-  passportTrigger.addEventListener("click", () => {
-    passportDialog.showModal();
-  });
+const logoutDialog = document.createElement("dialog");
+logoutDialog.className = "passport-dialog";
+logoutDialog.dataset.logoutDialog = "";
+logoutDialog.innerHTML = `
+  <div class="passport-form">
+    <h2>Log out?</h2>
+    <p>Would you like to log out of your account?</p>
+    <div class="passport-actions">
+      <button class="passport-button ghost-button" type="button" data-logout-cancel>
+        Cancel
+      </button>
+      <button class="passport-button" type="button" data-logout-confirm>
+        Log out
+      </button>
+    </div>
+  </div>
+`;
+document.body.appendChild(logoutDialog);
 
-  passportCancel.addEventListener("click", () => {
-    passportDialog.close();
-  });
-
-  passportDialog.addEventListener("click", (event) => {
-    const bounds = passportDialog.getBoundingClientRect();
-    const clickedBackdrop =
-      event.clientX < bounds.left ||
-      event.clientX > bounds.right ||
-      event.clientY < bounds.top ||
-      event.clientY > bounds.bottom;
-
-    if (clickedBackdrop) {
-      passportDialog.close();
-    }
-  });
-
-  passportForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-
-    const formData = new FormData(passportForm);
-    const email = String(formData.get("email") || "").trim();
-    const password = String(formData.get("password") || "").trim();
-
-    if (!email || !password) {
-      return;
-    }
-
-    const userKey = buildUserKey(email, password);
-    window.sessionStorage.setItem(AUTH_USER_KEY, userKey);
-    if (savePendingStampForUser(userKey)) {
-      syncPassportStamp();
-    }
-    window.location.href = "./Passport.html";
-  });
-}
-
-const passportGateDialog = document.querySelector("[data-passport-gate-dialog]");
-const passportGateForm = document.querySelector("[data-passport-gate-form]");
-const passportGateCancel = document.querySelector("[data-passport-gate-cancel]");
-const passportGateTitle = passportGateForm?.querySelector("h2");
-const passportGateCopy = passportGateForm?.querySelector("p");
+const loginForm = loginDialog.querySelector("[data-login-form]");
+const loginTitle = loginDialog.querySelector("[data-login-title]");
+const loginCopy = loginDialog.querySelector("[data-login-copy]");
+const loginError = loginDialog.querySelector("[data-login-error]");
+const loginCancel = loginDialog.querySelector("[data-login-cancel]");
+const logoutCancel = logoutDialog.querySelector("[data-logout-cancel]");
+const logoutConfirm = logoutDialog.querySelector("[data-logout-confirm]");
+const gatedTrailLinks = Array.from(document.querySelectorAll("[data-requires-login]"));
 const gatedPassportLinks = Array.from(
   document.querySelectorAll('a[href="./Passport.html"]')
-).filter((link) => !link.closest("[data-passport-dialog]"));
+);
 
-let pendingPassportHref = "./Passport.html";
+let pendingNavigationHref = "";
 let saveStampAfterLogin = false;
 let savePhotosAfterLogin = false;
 
-const setPassportGateMode = (mode = "passport") => {
-  if (!passportGateTitle || !passportGateCopy) {
-    return;
-  }
-
-  if (mode === "photos") {
-    passportGateTitle.textContent = "Log in to save your photo map";
-    passportGateCopy.textContent =
-      "Use the same email and password you want tied to your trail photo placements.";
-    return;
-  }
-
-  passportGateTitle.textContent = "Log in to view your passport";
-  passportGateCopy.textContent =
-    "Use the same email and password you want tied to your trail progress.";
+const openLoginDialog = ({
+  title = "Log in to continue",
+  copy = "Use your email and password to save or continue your Trinket Trails progress.",
+  href = "",
+  saveStamp = false,
+  savePhotos = false,
+} = {}) => {
+  pendingNavigationHref = href;
+  saveStampAfterLogin = saveStamp;
+  savePhotosAfterLogin = savePhotos;
+  loginTitle.textContent = title;
+  loginCopy.textContent = copy;
+  loginError.hidden = true;
+  loginError.textContent = "";
+  loginForm.reset();
+  loginDialog.showModal();
 };
 
-if (passportGateDialog && passportGateForm && passportGateCancel) {
-  gatedPassportLinks.forEach((link) => {
-    link.addEventListener("click", (event) => {
-      if (getCurrentUserKey()) {
-        return;
-      }
+const closeLogoutDialog = () => {
+  logoutDialog.close();
+};
 
-      event.preventDefault();
-      pendingPassportHref = link.getAttribute("href") || "./Passport.html";
-      saveStampAfterLogin = false;
-      savePhotosAfterLogin = false;
-      setPassportGateMode("passport");
-      passportGateDialog.showModal();
-    });
-  });
+const handleUserLogout = () => {
+  window.sessionStorage.removeItem(ACTIVE_USER_KEY);
+  window.sessionStorage.removeItem(ART_WALK_STAMP_PENDING_KEY);
+  syncLoginButton();
+  syncPassportStamp();
 
-  passportGateCancel.addEventListener("click", () => {
-    savePhotosAfterLogin = false;
+  if (typeof window.clearArtWalkUserPhotos === "function") {
+    window.clearArtWalkUserPhotos();
+  }
+
+  closeLogoutDialog();
+};
+
+loginCancel.addEventListener("click", () => {
+  saveStampAfterLogin = false;
+  savePhotosAfterLogin = false;
+  pendingNavigationHref = "";
+  loginDialog.close();
+});
+
+loginDialog.addEventListener("click", (event) => {
+  const bounds = loginDialog.getBoundingClientRect();
+  const clickedBackdrop =
+    event.clientX < bounds.left ||
+    event.clientX > bounds.right ||
+    event.clientY < bounds.top ||
+    event.clientY > bounds.bottom;
+
+  if (clickedBackdrop) {
     saveStampAfterLogin = false;
-    setPassportGateMode("passport");
-    passportGateDialog.close();
-  });
+    savePhotosAfterLogin = false;
+    pendingNavigationHref = "";
+    loginDialog.close();
+  }
+});
 
-  passportGateDialog.addEventListener("click", (event) => {
-    const bounds = passportGateDialog.getBoundingClientRect();
-    const clickedBackdrop =
-      event.clientX < bounds.left ||
-      event.clientX > bounds.right ||
-      event.clientY < bounds.top ||
-      event.clientY > bounds.bottom;
+logoutCancel.addEventListener("click", () => {
+  closeLogoutDialog();
+});
 
-    if (clickedBackdrop) {
-      savePhotosAfterLogin = false;
-      saveStampAfterLogin = false;
-      setPassportGateMode("passport");
-      passportGateDialog.close();
-    }
-  });
+logoutConfirm.addEventListener("click", () => {
+  handleUserLogout();
+});
 
-  passportGateForm.addEventListener("submit", (event) => {
-    event.preventDefault();
+logoutDialog.addEventListener("click", (event) => {
+  const bounds = logoutDialog.getBoundingClientRect();
+  const clickedBackdrop =
+    event.clientX < bounds.left ||
+    event.clientX > bounds.right ||
+    event.clientY < bounds.top ||
+    event.clientY > bounds.bottom;
 
-    const formData = new FormData(passportGateForm);
-    const email = String(formData.get("email") || "").trim();
-    const password = String(formData.get("password") || "").trim();
+  if (clickedBackdrop) {
+    closeLogoutDialog();
+  }
+});
 
-    if (!email || !password) {
+loginForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const formData = new FormData(loginForm);
+  const email = String(formData.get("email") || "").trim();
+  const password = String(formData.get("password") || "").trim();
+  const result = ensureUserAccount(email, password);
+
+  if (!result.ok) {
+    loginError.textContent = result.error;
+    loginError.hidden = false;
+    return;
+  }
+
+  if (saveStampAfterLogin) {
+    window.sessionStorage.setItem(ART_WALK_STAMP_PENDING_KEY, "true");
+  }
+
+  consumePendingStampForActiveUser();
+  syncPassportStamp();
+  syncLoginButton();
+
+  if (savePhotosAfterLogin && typeof window.saveArtWalkPhotosForUser === "function") {
+    window.saveArtWalkPhotosForUser(result.email);
+  } else if (typeof window.loadArtWalkPhotosForCurrentUser === "function") {
+    window.loadArtWalkPhotosForCurrentUser();
+  }
+
+  const nextHref = pendingNavigationHref;
+  saveStampAfterLogin = false;
+  savePhotosAfterLogin = false;
+  pendingNavigationHref = "";
+  loginDialog.close();
+
+  if (nextHref && nextHref !== "#stay") {
+    window.location.href = nextHref;
+  }
+});
+
+if (loginTrigger) {
+  loginTrigger.addEventListener("click", () => {
+    if (isUserSessionActive()) {
+      logoutDialog.showModal();
       return;
     }
 
-    const userKey = buildUserKey(email, password);
-    window.sessionStorage.setItem(AUTH_USER_KEY, userKey);
-
-    if (saveStampAfterLogin) {
-      window.sessionStorage.setItem(ART_WALK_FINISHED_KEY, "true");
-      markStampPending();
-    }
-
-    if (savePendingStampForUser(userKey)) {
-      syncPassportStamp();
-    }
-
-    if (savePhotosAfterLogin && typeof window.saveArtWalkPhotosForUser === "function") {
-      window.saveArtWalkPhotosForUser(userKey);
-      savePhotosAfterLogin = false;
-    }
-
-    saveStampAfterLogin = false;
-    passportGateDialog.close();
-    passportGateForm.reset();
-    setPassportGateMode("passport");
-
-    if (pendingPassportHref && pendingPassportHref !== "#stay") {
-      window.location.href = pendingPassportHref;
-    }
+    openLoginDialog({
+      title: "Log in to your account",
+      copy: "Use your email and password to save or continue your Trinket Trails progress.",
+    });
   });
 }
+
+gatedTrailLinks.forEach((link) => {
+  link.addEventListener("click", (event) => {
+    if (isUserSessionActive()) {
+      return;
+    }
+
+    event.preventDefault();
+    openLoginDialog({
+      title: "Log in to start this trail",
+      copy: "Log in first so your photos and stamps can be saved to your account.",
+      href: link.getAttribute("href") || "",
+    });
+  });
+});
+
+gatedPassportLinks.forEach((link) => {
+  link.addEventListener("click", (event) => {
+    if (isUserSessionActive()) {
+      return;
+    }
+
+    event.preventDefault();
+    openLoginDialog({
+      title: "Log in to view your passport",
+      copy: "Log in to open your passport and see the stamps saved to your account.",
+      href: link.getAttribute("href") || "",
+      saveStamp: window.sessionStorage.getItem(ART_WALK_STAMP_PENDING_KEY) === "true",
+    });
+  });
+});
+
+syncLoginButton();
 
 const trailProgress = document.querySelector("[data-trail-progress]");
 const photoLayer = document.querySelector("[data-photo-layer]");
@@ -331,8 +469,6 @@ const finishTrailActions = document.querySelector("[data-finish-trail-actions]")
 const finishTrailNo = document.querySelector("[data-finish-trail-no]");
 const finishTrailYes = document.querySelector("[data-finish-trail-yes]");
 const finishTrailClose = document.querySelector("[data-finish-trail-close]");
-const finishTrailSaveNote = document.querySelector("[data-finish-trail-save-note]");
-const finishTrailSaveLogin = document.querySelector("[data-finish-trail-save-login]");
 const finishTrailPassportLink = document.querySelector("[data-finish-trail-passport-link]");
 const passportEarnedStamp = document.querySelector("[data-passport-earned-stamp]");
 const trailQrLink = document.querySelector("[data-trail-qr-link]");
@@ -342,7 +478,8 @@ const syncPassportStamp = () => {
     return;
   }
 
-  passportEarnedStamp.hidden = !userHasArtWalkStamp();
+  consumePendingStampForActiveUser();
+  passportEarnedStamp.hidden = !getUserHasArtWalkStamp();
 };
 
 const syncArtWalkTrackerState = () => {
@@ -368,28 +505,11 @@ const syncArtWalkTrackerState = () => {
   }
 };
 
-const configureFinishRewardActions = () => {
-  const isLoggedIn = Boolean(getCurrentUserKey());
-
-  if (finishTrailSaveNote) {
-    finishTrailSaveNote.hidden = isLoggedIn;
-  }
-
-  if (finishTrailSaveLogin) {
-    finishTrailSaveLogin.hidden = isLoggedIn;
-  }
-
-  if (finishTrailPassportLink) {
-    finishTrailPassportLink.hidden = !isLoggedIn;
-  }
-};
-
 const openFinishRewardDialog = () => {
   if (!finishTrailRewardDialog) {
     return;
   }
 
-  configureFinishRewardActions();
   finishTrailRewardDialog.showModal();
 };
 
@@ -408,6 +528,8 @@ if (startTrailTrigger && startTrailDialog && startTrailNo && startTrailYes) {
   startTrailYes.addEventListener("click", () => {
     window.sessionStorage.setItem(ART_WALK_STARTED_KEY, "true");
     window.sessionStorage.removeItem(ART_WALK_FINISHED_KEY);
+    window.sessionStorage.removeItem(ART_WALK_REWARD_PENDING_KEY);
+    window.sessionStorage.removeItem(ART_WALK_STAMP_PENDING_KEY);
     syncArtWalkTrackerState();
     startTrailDialog.close();
   });
@@ -445,23 +567,20 @@ if (
   });
 
   finishTrailYes.addEventListener("click", () => {
-    const currentUserKey = getCurrentUserKey();
-
     if (window.sessionStorage.getItem(ART_WALK_STARTED_KEY) !== "true") {
       finishTrailDialog.close();
       return;
     }
 
-    if (currentUserKey) {
-      setUserStampEarned(currentUserKey);
-      clearPendingStamp();
-      syncPassportStamp();
+    if (isUserSessionActive()) {
+      setUserArtWalkStamp();
     } else {
-      markStampPending();
+      window.sessionStorage.setItem(ART_WALK_STAMP_PENDING_KEY, "true");
     }
 
     window.sessionStorage.setItem(ART_WALK_FINISHED_KEY, "true");
     window.sessionStorage.setItem(ART_WALK_REWARD_PENDING_KEY, "true");
+    syncPassportStamp();
     syncArtWalkTrackerState();
     finishTrailDialog.close();
     openFinishRewardDialog();
@@ -470,16 +589,6 @@ if (
   finishTrailClose.addEventListener("click", () => {
     finishTrailRewardDialog.close();
   });
-
-  if (finishTrailSaveLogin) {
-    finishTrailSaveLogin.addEventListener("click", () => {
-      saveStampAfterLogin = true;
-      pendingPassportHref = "./Passport.html";
-      finishTrailRewardDialog.close();
-      passportGateDialog?.showModal();
-    });
-  }
-
   finishTrailDialog.addEventListener("click", (event) => {
     const bounds = finishTrailDialog.getBoundingClientRect();
     const clickedBackdrop =
@@ -588,6 +697,15 @@ if (
   let dragState = null;
 
   const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+  const makeHandleFromName = (value) => {
+    const handle = String(value || "")
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "")
+      .slice(0, 18);
+
+    return handle ? `@${handle}` : "@trailfriend";
+  };
   const randomSharedDate = () => {
     const now = new Date();
     const daysBack = Math.floor(Math.random() * 120) + 3;
@@ -607,49 +725,67 @@ if (
       reader.readAsDataURL(file);
     });
 
-  trailPhotos.forEach((photo) => {
-    if (photo.owner === "others" && !photo.date) {
-      photo.date = randomSharedDate();
-    }
-  });
-
-  const serializeUserPhotos = () =>
+  const serializeUserPhotos = (email = getActiveUserEmail()) =>
     trailPhotos
       .filter((photo) => photo.owner === "yours" && !photo.pending)
-      .map(({ id, owner, src, name, uploader, date, description, x, y }) => ({
+      .map(({ id, owner, src, name, date, description, x, y, size }) => ({
         id,
         owner,
         src,
         name,
-        uploader,
+        uploader: getUsernameFromEmail(email)
+          ? `@${getUsernameFromEmail(email)}`
+          : "@trailfriend",
         date,
         description,
         x,
         y,
+        size,
       }));
 
-  const loadSavedUserPhotos = (userKey) => {
-    const savedPhotos = getUserSavedPhotos(userKey);
-    const otherPhotos = trailPhotos.filter((photo) => photo.owner !== "yours");
+  const loadSavedUserPhotos = (email = getActiveUserEmail()) => {
+    const sharedPhotos = trailPhotos.filter((photo) => photo.owner === "others");
+    const savedPhotos = getUserSavedPhotos(email).map((photo) => ({
+      ...photo,
+      pending: false,
+    }));
+
     trailPhotos.length = 0;
-    trailPhotos.push(
-      ...otherPhotos,
-      ...savedPhotos.map((photo) => ({
-        ...photo,
-        pending: false,
-      }))
-    );
+    trailPhotos.push(...sharedPhotos, ...savedPhotos);
     pendingPhotoId = null;
     confirmPlacement.hidden = true;
     renderTrailPhotos();
   };
 
-  const saveArtWalkPhotosForUser = (userKey) => {
-    setUserSavedPhotos(userKey, serializeUserPhotos());
-    loadSavedUserPhotos(userKey);
+  const saveArtWalkPhotosForUser = (email = getActiveUserEmail()) => {
+    if (!normalizeEmail(email)) {
+      return;
+    }
+
+    setUserSavedPhotos(serializeUserPhotos(email), email);
+    loadSavedUserPhotos(email);
   };
 
   window.saveArtWalkPhotosForUser = saveArtWalkPhotosForUser;
+  window.loadArtWalkPhotosForCurrentUser = () => {
+    if (isUserSessionActive()) {
+      loadSavedUserPhotos();
+    }
+  };
+  window.clearArtWalkUserPhotos = () => {
+    const sharedPhotos = trailPhotos.filter((photo) => photo.owner === "others");
+    trailPhotos.length = 0;
+    trailPhotos.push(...sharedPhotos);
+    pendingPhotoId = null;
+    confirmPlacement.hidden = true;
+    renderTrailPhotos();
+  };
+
+  trailPhotos.forEach((photo) => {
+    if (photo.owner === "others" && !photo.date) {
+      photo.date = randomSharedDate();
+    }
+  });
 
   const positionPhoto = (photo, marker, clientX, clientY) => {
     const bounds = trailProgress.getBoundingClientRect();
@@ -807,9 +943,9 @@ if (
       owner: "yours",
       src: photoSrc,
       name,
-      uploader: getUsernameFromUserKey(getCurrentUserKey())
-        ? `@${getUsernameFromUserKey(getCurrentUserKey())}`
-        : "@guest",
+      uploader: isUserSessionActive()
+        ? `@${getUsernameFromEmail(getActiveUserEmail())}`
+        : makeHandleFromName(name),
       date,
       description,
       x: 0.24,
@@ -839,31 +975,28 @@ if (
     confirmPlacement.hidden = true;
     renderTrailPhotos();
 
-    const currentUserKey = getCurrentUserKey();
-
-    if (currentUserKey) {
-      saveArtWalkPhotosForUser(currentUserKey);
+    if (isUserSessionActive()) {
+      saveArtWalkPhotosForUser();
       return;
     }
 
-    if (passportGateDialog && passportGateForm) {
-      const shouldSavePhotos = window.confirm("Log in to save your photo map?");
-
-      if (shouldSavePhotos) {
-        pendingPassportHref = "#stay";
-        savePhotosAfterLogin = true;
-        saveStampAfterLogin = false;
-        setPassportGateMode("photos");
-        passportGateDialog.showModal();
-      }
+    if (
+      window.confirm("Log in to save this photo to your trail map?")
+    ) {
+      openLoginDialog({
+        title: "Log in to save your photo map",
+        copy: "Use your email and password to save or continue your Trinket Trails progress.",
+        href: "#stay",
+        savePhotos: true,
+      });
     }
   });
 
   filterOthers.addEventListener("change", renderTrailPhotos);
   filterYours.addEventListener("change", renderTrailPhotos);
-  const currentUserKey = getCurrentUserKey();
-  if (currentUserKey) {
-    loadSavedUserPhotos(currentUserKey);
+  if (isUserSessionActive()) {
+    loadSavedUserPhotos();
+  } else {
+    renderTrailPhotos();
   }
-  renderTrailPhotos();
 }
