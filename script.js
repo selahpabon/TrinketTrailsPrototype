@@ -472,6 +472,16 @@ const finishTrailClose = document.querySelector("[data-finish-trail-close]");
 const finishTrailPassportLink = document.querySelector("[data-finish-trail-passport-link]");
 const passportEarnedStamp = document.querySelector("[data-passport-earned-stamp]");
 const trailQrLink = document.querySelector("[data-trail-qr-link]");
+const cameFromTrailFlow = /\/(start-trail|finish-trail)\.html$/i.test(
+  document.referrer || ""
+);
+
+if (trailProgress && !cameFromTrailFlow) {
+  window.sessionStorage.removeItem(ART_WALK_STARTED_KEY);
+  window.sessionStorage.removeItem(ART_WALK_FINISHED_KEY);
+  window.sessionStorage.removeItem(ART_WALK_REWARD_PENDING_KEY);
+  window.sessionStorage.removeItem(ART_WALK_STAMP_PENDING_KEY);
+}
 
 const syncPassportStamp = () => {
   if (!passportEarnedStamp) {
@@ -491,13 +501,17 @@ const syncArtWalkTrackerState = () => {
   const finished = window.sessionStorage.getItem(ART_WALK_FINISHED_KEY) === "true";
 
   trailProgress.classList.toggle("is-started", started);
+  trailProgress.classList.toggle("is-finished", finished);
 
   if (startTrailTrigger) {
-    startTrailTrigger.hidden = started;
+    startTrailTrigger.setAttribute("aria-disabled", started ? "true" : "false");
   }
 
   if (finishTrailTrigger) {
-    finishTrailTrigger.hidden = !started || finished;
+    finishTrailTrigger.setAttribute(
+      "aria-disabled",
+      !started || finished ? "true" : "false"
+    );
   }
 
   if (trailQrLink) {
@@ -518,6 +532,10 @@ syncArtWalkTrackerState();
 
 if (startTrailTrigger && startTrailDialog && startTrailNo && startTrailYes) {
   startTrailTrigger.addEventListener("click", () => {
+    if (window.sessionStorage.getItem(ART_WALK_STARTED_KEY) === "true") {
+      return;
+    }
+
     startTrailDialog.showModal();
   });
 
@@ -559,6 +577,13 @@ if (
   finishTrailClose
 ) {
   finishTrailTrigger.addEventListener("click", () => {
+    const started = window.sessionStorage.getItem(ART_WALK_STARTED_KEY) === "true";
+    const finished = window.sessionStorage.getItem(ART_WALK_FINISHED_KEY) === "true";
+
+    if (!started || finished) {
+      return;
+    }
+
     finishTrailDialog.showModal();
   });
 
