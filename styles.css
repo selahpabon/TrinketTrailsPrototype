@@ -1117,6 +1117,8 @@ input {
   position: absolute;
   top: 28.3%;
   left: 14.9%;
+  display: grid;
+  place-items: center;
   width: clamp(54px, 6.8vw, 78px);
   aspect-ratio: 1;
   border: 0;
@@ -1125,19 +1127,53 @@ input {
   transform: translate(-50%, -50%);
   z-index: 4;
   cursor: pointer;
+  pointer-events: auto;
+}
+
+.trail-start-trigger::before,
+.trail-finish-trigger::before,
+.trail-start-trigger::after,
+.trail-finish-trigger::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: clamp(2.2rem, 3.6vw, 3rem);
+  line-height: 1;
+  transform: translate(-50%, -50%);
+}
+
+.trail-start-trigger::before,
+.trail-finish-trigger::before {
+  content: "★";
+  color: #f7f7f7;
+}
+
+.trail-start-trigger::after,
+.trail-finish-trigger::after {
+  content: "☆";
+  color: #ffe96a;
+  font-size: clamp(2.45rem, 4vw, 3.3rem);
+  text-shadow:
+    0 0 16px rgba(255, 233, 106, 0.45),
+    0 0 28px rgba(255, 214, 74, 0.28),
+    0 2px 8px rgba(0, 0, 0, 0.16);
+  animation: trail-star-pulse 1.8s ease-in-out infinite;
 }
 
 .trail-start-trigger:hover,
-.trail-start-trigger:focus-visible {
-  background: rgba(255, 228, 10, 0.22);
-  box-shadow: 0 0 0 4px rgba(255, 228, 10, 0.28);
+.trail-start-trigger:focus-visible,
+.trail-finish-trigger:hover,
+.trail-finish-trigger:focus-visible {
   outline: none;
+  filter: brightness(1.08);
 }
 
 .trail-finish-trigger {
   position: absolute;
-  top: 67.5%;
-  left: 83.5%;
+  top: 67.1%;
+  left: 83.4%;
+  display: grid;
+  place-items: center;
   width: clamp(54px, 6.8vw, 78px);
   aspect-ratio: 1;
   border: 0;
@@ -1150,16 +1186,49 @@ input {
   pointer-events: none;
 }
 
-.trail-finish-trigger:hover,
-.trail-finish-trigger:focus-visible {
-  background: rgba(255, 228, 10, 0.22);
-  box-shadow: 0 0 0 4px rgba(255, 228, 10, 0.28);
-  outline: none;
-}
-
 .trail-progress.is-started .trail-finish-trigger {
   opacity: 1;
   pointer-events: auto;
+}
+
+.trail-progress.is-started .trail-start-trigger {
+  pointer-events: none;
+}
+
+.trail-progress.is-started .trail-start-trigger::before {
+  color: #ffd64a;
+}
+
+.trail-progress.is-started .trail-start-trigger::after {
+  content: none;
+}
+
+.trail-progress.is-finished .trail-finish-trigger {
+  pointer-events: none;
+}
+
+.trail-progress.is-finished .trail-finish-trigger::before {
+  color: #ffd64a;
+}
+
+.trail-progress.is-finished .trail-finish-trigger::after {
+  content: none;
+}
+
+.trail-start-trigger[aria-disabled="true"],
+.trail-finish-trigger[aria-disabled="true"] {
+  cursor: default;
+}
+
+@keyframes trail-star-pulse {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(0.88);
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(1.18);
+  }
 }
 
 .trail-photo-layer {
