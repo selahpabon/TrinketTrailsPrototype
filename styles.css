@@ -244,14 +244,14 @@ input {
   height: auto;
   object-fit: contain;
   filter:
-    drop-shadow(0 10px 18px rgba(0, 0, 0, 0.14))
-    drop-shadow(0 2px 5px rgba(255, 255, 255, 0.14));
+    drop-shadow(0 10px 18px rgba(0, 0, 0, 0.14)) drop-shadow(0 2px 5px rgba(255, 255, 255, 0.14));
   animation: hero-float 8.8s ease-in-out infinite;
   opacity: 0.98;
   will-change: transform;
 }
 
 @keyframes hero-float {
+
   0%,
   100% {
     transform: translate3d(0, -2px, 0);
@@ -579,6 +579,10 @@ input {
   border-radius: 22px;
 }
 
+.walk-card-sculpture img {
+  filter: saturate(1.18) brightness(0.62) hue-rotate(-18deg);
+}
+
 .walk-card-label {
   position: absolute;
   inset: 0;
@@ -608,10 +612,98 @@ input {
   border-radius: 20px;
 }
 
-.map-card img {
+.interactive-map {
+  position: relative;
+  aspect-ratio: 1516 / 825;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #dff2de;
+}
+
+.interactive-map-base {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.map-trail {
+  position: absolute;
+  display: block;
+  transform-origin: center;
+  filter: drop-shadow(0 2px 3px rgba(44, 54, 56, 0.28));
+  transition: transform 180ms ease, filter 180ms ease, opacity 180ms ease;
+}
+
+.map-trail img {
   display: block;
   width: 100%;
   height: auto;
+}
+
+.map-trail:hover,
+.map-trail:focus-visible {
+  transform: scale(1.035);
+  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 10px rgba(0, 160, 219, 0.34));
+  z-index: 3;
+}
+
+.map-trail:focus-visible {
+  outline: none;
+}
+
+.map-trail-label {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.92);
+  border-radius: 999px;
+  background: rgba(16, 49, 40, 0.78);
+  color: #ffffff;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease, transform 180ms ease;
+  white-space: nowrap;
+}
+
+.map-trail:hover .map-trail-label,
+.map-trail:focus-visible .map-trail-label {
+  opacity: 1;
+  transform: translate(-50%, calc(-50% - 4px));
+}
+
+.map-trail-yellow {
+  left: 0.1%;
+  top: 11.5%;
+  width: 30.7%;
+}
+
+.map-trail-red {
+  left: 21.65%;
+  top: 47.65%;
+  width: 42.1%;
+}
+
+.map-trail-purple {
+  left: 5.2%;
+  top: 63.55%;
+  width: 24.15%;
+  filter: drop-shadow(0 3px 4px rgba(31, 47, 54, 0.42));
+}
+
+.map-trail-green {
+  left: 42.18%;
+  top: 0.55%;
+  width: 47%;
+  aspect-ratio: 700 / 221;
+}
+
+.map-trail-green .map-trail-label {
+  top: 44%;
 }
 
 .filter-button {
@@ -861,19 +953,19 @@ input {
 
 .story-one {
   background:
-    linear-gradient(135deg, rgba(27, 89, 34, 0.4), rgba(255,255,255,0)),
+    linear-gradient(135deg, rgba(27, 89, 34, 0.4), rgba(255, 255, 255, 0)),
     linear-gradient(120deg, #a3db76 0%, #4f7930 100%);
 }
 
 .story-two {
   background:
-    linear-gradient(135deg, rgba(15, 65, 90, 0.3), rgba(255,255,255,0)),
+    linear-gradient(135deg, rgba(15, 65, 90, 0.3), rgba(255, 255, 255, 0)),
     linear-gradient(120deg, #f3d4d6 0%, #6cb8dd 100%);
 }
 
 .story-three {
   background:
-    linear-gradient(135deg, rgba(20, 65, 36, 0.35), rgba(255,255,255,0)),
+    linear-gradient(135deg, rgba(20, 65, 36, 0.35), rgba(255, 255, 255, 0)),
     linear-gradient(120deg, #a7d079 0%, #234925 100%);
 }
 
@@ -993,7 +1085,78 @@ input {
   aspect-ratio: 1470 / 1072;
   border-radius: 26px;
   overflow: hidden;
-  background: url("./assets/art-walk-path-map.png") center center / cover no-repeat;
+  background: #d9eee0;
+}
+
+.trail-map-base-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.trail-map-overlay {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.trail-map-overlay img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.trail-map-overlay:focus-visible {
+  outline: none;
+}
+
+.trail-map-route {
+  left: 9.55%;
+  top: 10.75%;
+  width: 80.75%;
+  filter: drop-shadow(0 1px 2px rgba(64, 54, 48, 0.18));
+  transition: transform 180ms ease, filter 180ms ease;
+}
+
+.trail-map-route:hover,
+.trail-map-route:focus-visible {
+  transform: scale(1.012);
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 8px rgba(239, 93, 94, 0.42));
+}
+
+.trail-map-star {
+  width: 1.98%;
+  min-width: 24px;
+  filter: drop-shadow(0 1px 1px rgba(47, 53, 39, 0.22));
+  transition: transform 180ms ease, filter 180ms ease;
+}
+
+.trail-map-star:hover,
+.trail-map-star:focus-visible {
+  transform: scale(1.18);
+  filter: drop-shadow(0 0 10px rgba(255, 239, 90, 0.85)) drop-shadow(0 0 3px rgba(50, 50, 24, 0.38));
+}
+
+.trail-map-star-one {
+  left: 30.2%;
+  top: 29%;
+}
+
+.trail-map-star-two {
+  left: 40.55%;
+  top: 37.5%;
+}
+
+.trail-map-star-three {
+  left: 73.05%;
+  top: 57.15%;
+}
+
+.trail-map-star-four {
+  left: 80.55%;
+  top: 66.15%;
 }
 
 .trail-about {
@@ -1034,8 +1197,8 @@ input {
 
 .trail-qr-inner {
   display: grid;
-  grid-template-columns: 1.35fr 320px;
-  gap: 32px;
+  grid-template-columns: minmax(0, 1fr) minmax(400px, 540px);
+  gap: 20px;
   align-items: center;
   width: min(1540px, calc(100vw - 112px));
   margin: 0 auto;
@@ -1057,12 +1220,15 @@ input {
   line-height: 1.8;
 }
 
+.trail-qr-link {
+  justify-self: start;
+}
+
 .trail-qr-card {
   display: block;
-  width: 100%;
+  width: min(100%, 500px);
   height: auto;
-  border-radius: 6px;
-  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.14);
+  margin-left: -8px;
 }
 
 .trail-progress {

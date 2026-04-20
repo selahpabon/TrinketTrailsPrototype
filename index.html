@@ -194,7 +194,7 @@
             </article>
           </a>
           <a class="hunt-card-link" href="#hunts" aria-label="Scultpure Stroll">
-            <article class="hunt-card walk-card">
+            <article class="hunt-card walk-card walk-card-sculpture">
               <img src="./assets/walks/walk-2.png" alt="Scultpure Stroll icon" />
               <span class="walk-card-label">Scultpure Stroll</span>
             </article>
@@ -206,7 +206,33 @@
       <section class="content-section map-section" id="support">
         <h2>Trail Map</h2>
         <div class="map-card">
-          <img src="./assets/greater-trail-map.svg" alt="Greater trail map" />
+          <div class="interactive-map" role="img" aria-label="Greater trail map with clickable trails">
+            <img
+              class="interactive-map-base"
+              src="./assets/greater-trail-map-base.svg"
+              alt="Greater trail map"
+            />
+
+            <a class="map-trail map-trail-yellow" href="#hunts" aria-label="Animal Path">
+              <img src="./assets/map-line-5.svg" alt="" aria-hidden="true" />
+              <span class="map-trail-label">Animal Path</span>
+            </a>
+
+            <a class="map-trail map-trail-red" href="./ArtWalkPath.html" aria-label="Art Walk">
+              <img src="./assets/map-line-1.svg" alt="" aria-hidden="true" />
+              <span class="map-trail-label">Art Walk</span>
+            </a>
+
+            <a class="map-trail map-trail-purple" href="#hunts" aria-label="Sculpture Stroll">
+              <img src="./assets/map-line-4.svg" alt="" aria-hidden="true" />
+              <span class="map-trail-label">Sculpture Stroll</span>
+            </a>
+
+            <a class="map-trail map-trail-green" href="#hunts" aria-label="Nature Walk">
+              <img src="./assets/map-line-3.svg" alt="" aria-hidden="true" />
+              <span class="map-trail-label">Nature Walk</span>
+            </a>
+          </div>
         </div>
       </section>
 
