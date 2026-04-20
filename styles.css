@@ -1472,7 +1472,7 @@ input {
 
 .trail-action-button {
   display: block;
-  width: min(420px, calc(50% - 11px));
+  width: min(494px, calc(50% - 11px));
 }
 
 .trail-action-button img {

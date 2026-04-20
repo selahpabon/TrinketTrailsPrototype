@@ -140,6 +140,19 @@ const setUserSavedPhotos = (photos, email = getActiveUserEmail()) => {
   setUserDatabase(database);
 };
 
+const historyBackLinks = Array.from(document.querySelectorAll("[data-history-back]"));
+
+historyBackLinks.forEach((link) => {
+  link.addEventListener("click", (event) => {
+    if (window.history.length <= 1) {
+      return;
+    }
+
+    event.preventDefault();
+    window.history.back();
+  });
+});
+
 const syncLoginButton = () => {
   if (!loginTrigger) {
     return;
