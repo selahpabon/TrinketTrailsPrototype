@@ -1251,6 +1251,7 @@ input {
   width: 100%;
   background: linear-gradient(180deg, var(--sky-deep), #19a5e0);
   color: #ffffff;
+  scroll-margin-top: 136px;
 }
 
 .trail-qr-inner {

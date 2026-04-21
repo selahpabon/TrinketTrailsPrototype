@@ -6,6 +6,9 @@ const ART_WALK_STARTED_KEY = "trinket-trails-art-walk-started";
 const ART_WALK_FINISHED_KEY = "trinket-trails-art-walk-finished";
 const ART_WALK_REWARD_PENDING_KEY = "trinket-trails-art-walk-reward-pending";
 const ART_WALK_STAMP_PENDING_KEY = "trinket-trails-art-walk-stamp-pending";
+const ART_WALK_LOGIN_DISMISSED_KEY = "trinket-trails-art-walk-login-dismissed";
+const ART_WALK_LOGIN_PROMPT_PARAM = "promptLogin";
+const LOGIN_REDIRECT_KEY = "trinket-trails-login-redirect";
 
 const normalizeEmail = (value) => String(value || "").trim().toLowerCase();
 const getUsernameFromEmail = (email) => normalizeEmail(email).split("@")[0] || "";
@@ -232,7 +235,7 @@ const loginDialog = document.createElement("dialog");
 loginDialog.className = "passport-dialog";
 loginDialog.dataset.loginDialog = "";
 loginDialog.innerHTML = `
-  <form class="passport-form" method="dialog" data-login-form>
+  <form class="passport-form" data-login-form>
     <h2 data-login-title>Log in to continue</h2>
     <p data-login-copy>Use your email and password to save or continue your Trinket Trails progress.</p>
     <p class="login-error" data-login-error hidden></p>
@@ -288,6 +291,17 @@ const gatedPassportLinks = Array.from(
 let pendingNavigationHref = "";
 let saveStampAfterLogin = false;
 let savePhotosAfterLogin = false;
+let shouldNavigateAfterLogin = false;
+
+const getLoginRedirectHref = (link) => {
+  const destination = link.dataset.loginRedirect || link.getAttribute("href") || "";
+
+  if (!destination) {
+    return "";
+  }
+
+  return new URL(destination, window.location.href).href;
+};
 
 const openLoginDialog = ({
   title = "Log in to continue",
@@ -297,6 +311,13 @@ const openLoginDialog = ({
   savePhotos = false,
 } = {}) => {
   pendingNavigationHref = href;
+  shouldNavigateAfterLogin = Boolean(href && href !== "#stay");
+  loginForm.dataset.redirectAfterLogin = href || "";
+  if (href) {
+    window.sessionStorage.setItem(LOGIN_REDIRECT_KEY, href);
+  } else {
+    window.sessionStorage.removeItem(LOGIN_REDIRECT_KEY);
+  }
   saveStampAfterLogin = saveStamp;
   savePhotosAfterLogin = savePhotos;
   loginTitle.textContent = title;
@@ -307,6 +328,33 @@ const openLoginDialog = ({
   loginDialog.showModal();
 };
 
+const navigateToPendingLoginDestination = () => {
+  const nextHref =
+    loginForm.dataset.redirectAfterLogin ||
+    pendingNavigationHref ||
+    window.sessionStorage.getItem(LOGIN_REDIRECT_KEY) ||
+    "";
+
+  if (!nextHref || nextHref === "#stay") {
+    return false;
+  }
+
+  pendingNavigationHref = "";
+  shouldNavigateAfterLogin = false;
+  loginForm.dataset.redirectAfterLogin = "";
+  window.sessionStorage.removeItem(LOGIN_REDIRECT_KEY);
+  loginDialog.close();
+  window.setTimeout(() => {
+    const redirectLink = document.createElement("a");
+    redirectLink.href = nextHref;
+    redirectLink.style.display = "none";
+    document.body.appendChild(redirectLink);
+    redirectLink.click();
+    redirectLink.remove();
+  }, 50);
+  return true;
+};
+
 const closeLogoutDialog = () => {
   logoutDialog.close();
 };
@@ -314,6 +362,7 @@ const closeLogoutDialog = () => {
 const handleUserLogout = () => {
   window.sessionStorage.removeItem(ACTIVE_USER_KEY);
   window.sessionStorage.removeItem(ART_WALK_STAMP_PENDING_KEY);
+  window.sessionStorage.removeItem(ART_WALK_LOGIN_DISMISSED_KEY);
   syncLoginButton();
   syncPassportStamp();
 
@@ -325,9 +374,15 @@ const handleUserLogout = () => {
 };
 
 loginCancel.addEventListener("click", () => {
+  if (!pendingNavigationHref) {
+    window.sessionStorage.setItem(ART_WALK_LOGIN_DISMISSED_KEY, "true");
+  }
   saveStampAfterLogin = false;
   savePhotosAfterLogin = false;
+  shouldNavigateAfterLogin = false;
   pendingNavigationHref = "";
+  loginForm.dataset.redirectAfterLogin = "";
+  window.sessionStorage.removeItem(LOGIN_REDIRECT_KEY);
   loginDialog.close();
 });
 
@@ -340,9 +395,15 @@ loginDialog.addEventListener("click", (event) => {
     event.clientY > bounds.bottom;
 
   if (clickedBackdrop) {
+    if (!pendingNavigationHref) {
+      window.sessionStorage.setItem(ART_WALK_LOGIN_DISMISSED_KEY, "true");
+    }
     saveStampAfterLogin = false;
     savePhotosAfterLogin = false;
+    shouldNavigateAfterLogin = false;
     pendingNavigationHref = "";
+    loginForm.dataset.redirectAfterLogin = "";
+    window.sessionStorage.removeItem(LOGIN_REDIRECT_KEY);
     loginDialog.close();
   }
 });
@@ -387,6 +448,7 @@ loginForm.addEventListener("submit", (event) => {
   }
 
   consumePendingStampForActiveUser();
+  window.sessionStorage.removeItem(ART_WALK_LOGIN_DISMISSED_KEY);
   syncPassportStamp();
   syncLoginButton();
 
@@ -396,14 +458,19 @@ loginForm.addEventListener("submit", (event) => {
     window.loadArtWalkPhotosForCurrentUser();
   }
 
-  const nextHref = pendingNavigationHref;
   saveStampAfterLogin = false;
   savePhotosAfterLogin = false;
-  pendingNavigationHref = "";
-  loginDialog.close();
 
-  if (nextHref && nextHref !== "#stay") {
-    window.location.href = nextHref;
+  if (navigateToPendingLoginDestination()) {
+    return;
+  }
+
+  loginDialog.close();
+});
+
+loginDialog.addEventListener("close", () => {
+  if (shouldNavigateAfterLogin && isUserSessionActive()) {
+    navigateToPendingLoginDestination();
   }
 });
 
@@ -431,7 +498,7 @@ gatedTrailLinks.forEach((link) => {
     openLoginDialog({
       title: "Log in to start this trail",
       copy: "Log in first so your photos and stamps can be saved to your account.",
-      href: link.getAttribute("href") || "",
+      href: getLoginRedirectHref(link),
     });
   });
 });
@@ -488,6 +555,14 @@ const trailQrLink = document.querySelector("[data-trail-qr-link]");
 const cameFromTrailFlow = /\/(start-trail|finish-trail)\.html$/i.test(
   document.referrer || ""
 );
+const artWalkUrl = new URL(window.location.href);
+const shouldPromptArtWalkLogin =
+  trailProgress && artWalkUrl.searchParams.get(ART_WALK_LOGIN_PROMPT_PARAM) === "1";
+
+if (shouldPromptArtWalkLogin) {
+  artWalkUrl.searchParams.delete(ART_WALK_LOGIN_PROMPT_PARAM);
+  window.history.replaceState({}, "", `${artWalkUrl.pathname}${artWalkUrl.search}${artWalkUrl.hash}`);
+}
 
 if (trailProgress && !cameFromTrailFlow) {
   window.sessionStorage.removeItem(ART_WALK_STARTED_KEY);
@@ -542,6 +617,26 @@ const openFinishRewardDialog = () => {
 
 syncPassportStamp();
 syncArtWalkTrackerState();
+
+if (
+  trailProgress &&
+  !isUserSessionActive() &&
+  (shouldPromptArtWalkLogin ||
+    window.sessionStorage.getItem(ART_WALK_LOGIN_DISMISSED_KEY) !== "true")
+) {
+  window.setTimeout(() => {
+    if (loginDialog.open || isUserSessionActive()) {
+      return;
+    }
+
+    openLoginDialog({
+      title: "Log in to save your Art Walk progress",
+      copy:
+        "Use your email and password to save your uploaded photos and earned stamps to your account.",
+      href: "",
+    });
+  }, 350);
+}
 
 if (startTrailTrigger && startTrailDialog && startTrailNo && startTrailYes) {
   startTrailTrigger.addEventListener("click", () => {
