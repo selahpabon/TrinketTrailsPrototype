@@ -586,19 +586,34 @@ input {
 .walk-card-label {
   position: absolute;
   inset: 0;
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   padding: 18px;
   border-radius: 22px;
   background: rgba(0, 0, 0, 0.18);
   color: #ffffff;
   font-family: "Manrope", sans-serif;
-  font-size: clamp(1.15rem, 1.7vw, 1.4rem);
-  font-weight: 700;
   letter-spacing: -0.03em;
   text-align: center;
   opacity: 0;
   transition: opacity 180ms ease;
+}
+
+.walk-card-title {
+  display: block;
+  font-size: clamp(1.15rem, 1.7vw, 1.4rem);
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.walk-card-meta {
+  display: block;
+  font-size: clamp(0.82rem, 1.1vw, 0.96rem);
+  font-weight: 500;
+  line-height: 1.2;
 }
 
 .hunt-card-link:hover .walk-card-label,
@@ -1178,6 +1193,14 @@ input {
   color: #2c2a28;
 }
 
+.trail-about p.trail-about-meta {
+  margin-top: 8px;
+  color: #f75b11;
+  font-style: italic;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
 .trail-divider {
   margin: 40px auto;
 }
@@ -1387,6 +1410,7 @@ input {
 }
 
 @keyframes trail-star-pulse {
+
   0%,
   100% {
     transform: translate(-50%, -50%) scale(0.88);
