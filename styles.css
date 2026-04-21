@@ -1150,8 +1150,43 @@ input {
 
 .trail-map-star:hover,
 .trail-map-star:focus-visible {
-  transform: scale(1.18);
-  filter: drop-shadow(0 0 10px rgba(255, 239, 90, 0.85)) drop-shadow(0 0 3px rgba(50, 50, 24, 0.38));
+  transform: scale(1.12);
+  filter: drop-shadow(0 5px 9px rgba(29, 38, 34, 0.34));
+}
+
+.trail-map-hint {
+  position: absolute;
+  left: calc(100% + 12px);
+  top: 50%;
+  z-index: 5;
+  width: min(220px, 24vw);
+  padding: 9px 11px;
+  border: 1px solid rgba(0, 160, 219, 0.16);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.82);
+  color: #2c2a28;
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(0.64rem, 0.76vw, 0.74rem);
+  font-weight: 400;
+  line-height: 1.32;
+  text-align: left;
+  box-shadow: 0 9px 20px rgba(21, 31, 31, 0.22);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-50%) translateX(-4px);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.trail-map-hint-left {
+  right: calc(100% + 12px);
+  left: auto;
+  transform: translateY(-50%) translateX(4px);
+}
+
+.trail-map-star:hover .trail-map-hint,
+.trail-map-star:focus-visible .trail-map-hint {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
 }
 
 .trail-map-star-one {
